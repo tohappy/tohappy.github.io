@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>radio7 · 하이파이 오디오 셀렉션</title>
+<meta name="description" content="radio7 — 하이파이·홈시어터 셀렉션 (프로토타입). 상품 정보와 구매는 오디오몰에서 진행됩니다.">
+<style>
+  :root {
+    --bg: #f6f1e7;
+    --panel: #fffdf8;
+    --panel-2: #efe7d6;
+    --line: #e2d8c3;
+    --text: #2a2620;
+    --muted: #7a7164;
+    --accent: #b9770e;
+    --accent-2: #9a6008;
+    --radius: 14px;
+    --max: 1200px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+  /* 상단 알림 */
+  .notice {
+    background: var(--accent);
+    color: #fffaf0;
+    font-size: 13px;
+    text-align: center;
+    padding: 8px 16px;
+    font-weight: 600;
+  }
+
+  /* 헤더 */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(246,241,231,.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav { display: flex; align-items: center; gap: 28px; height: 64px; }
+  .logo { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+  .logo b { color: var(--accent); }
+  nav { display: flex; gap: 22px; font-size: 14px; color: var(--muted); }
+  nav a:hover { color: var(--text); }
+  .search { margin-left: auto; display: flex; }
+  .search input {
+    width: 220px; background: var(--panel); border: 1px solid var(--line);
+    color: var(--text); padding: 9px 14px; border-radius: 999px 0 0 999px;
+    font-size: 14px; outline: none;
+  }
+  .search input:focus { border-color: var(--accent); }
+  .search button {
+    background: var(--accent); border: 0; color: #fffaf0; font-weight: 700;
+    padding: 0 18px; border-radius: 0 999px 999px 0; cursor: pointer; font-size: 14px;
+  }
+
+  /* 히어로 */
+  .hero { padding: 72px 0 56px; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: -20% -10% auto auto; width: 620px; height: 620px;
+    background: radial-gradient(circle, rgba(212,160,80,.28), transparent 62%);
+    pointer-events: none;
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; position: relative; }
+  .eyebrow { color: var(--accent); font-size: 13px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700; }
+  h1 { font-size: clamp(34px, 5vw, 58px); line-height: 1.12; letter-spacing: -.03em; margin: 14px 0 18px; }
+  h1 em { font-style: normal; color: var(--accent-2); }
+  .hero p { color: var(--muted); max-width: 520px; font-size: 17px; }
+  .cta { display: flex; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 24px; border-radius: 999px; font-weight: 700; font-size: 15px;
+    border: 1px solid var(--line); transition: .2s;
+  }
+  .btn.primary { background: var(--accent); color: #fffaf0; border-color: var(--accent); }
+  .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+  .btn.ghost:hover { border-color: var(--accent); color: var(--accent-2); }
+
+  /* 히어로 비주얼: 레코드 */
+  .vinyl-stage { display: grid; place-items: center; }
+  .vinyl {
+    width: min(380px, 80vw); aspect-ratio: 1; border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 50%, var(--accent) 0 13%, #111 13.5% 15%, transparent 15.5%),
+      repeating-radial-gradient(circle at 50% 50%, #15171c 0 2px, #0c0d10 2px 4px);
+    border: 1px solid var(--line);
+    box-shadow: 0 30px 70px rgba(70,50,20,.28), inset 0 0 0 10px #1a1c21;
+    position: relative;
+    animation: spin 14s linear infinite;
+  }
+  .vinyl::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(from 20deg, transparent 0 30%, rgba(255,255,255,.07) 38%, transparent 46% 80%, rgba(255,255,255,.05) 88%, transparent);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .vinyl { animation: none; } }
+
+  /* 섹션 공통 */
+  section { padding: 56px 0; }
+  .sec-head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 26px; gap: 16px; }
+  .sec-head h2 { font-size: 28px; letter-spacing: -.02em; }
+  .sec-head p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .more { color: var(--muted); font-size: 14px; white-space: nowrap; }
+  .more:hover { color: var(--accent-2); }
+
+  /* 샘플 표시 */
+  .sample { font-size: 12px; color: var(--muted); border: 1px dashed var(--line); padding: 4px 12px; border-radius: 999px; white-space: nowrap; }
+
+  /* 전문가 소개 */
+  .experts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .expert { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; transition: .2s; }
+  .expert:hover { border-color: var(--accent); }
+  .avatar { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 20px; color: #fffaf0; background: linear-gradient(135deg, var(--accent), #d9a14a); margin-bottom: 16px; }
+  .role { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .1em; }
+  .expert h3 { font-size: 20px; line-height: 1.4; letter-spacing: -.02em; margin: 6px 0 10px; }
+  .expert p { color: var(--muted); font-size: 15px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chips span { font-size: 12px; padding: 4px 12px; border-radius: 999px; background: var(--panel-2); color: var(--text); }
+
+  /* 사용자 후기 */
+  #voices { background: linear-gradient(180deg, transparent, rgba(239,231,214,.55) 30%, rgba(239,231,214,.55) 70%, transparent); }
+  .voices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .voice { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; display: flex; flex-direction: column; gap: 14px; }
+  .stars { color: var(--accent); letter-spacing: .15em; font-size: 16px; }
+  .voice blockquote { font-size: 17px; line-height: 1.7; letter-spacing: -.01em; flex: 1; }
+  .voice figcaption { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+  .voice figcaption b { color: var(--text); font-size: 14px; }
+  .voice.has-photo { padding-top: 0; overflow: hidden; }
+  .voice .photo { position: relative; margin: 0 -30px; aspect-ratio: 16 / 10; overflow: hidden; background: #111; }
+  .voice .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-tag { position: absolute; left: 14px; bottom: 12px; font-size: 11px; font-weight: 800; letter-spacing: .06em; color: #fffaf0; background: rgba(42,38,32,.78); padding: 4px 10px; border-radius: 999px; }
+  .voices-more { display: flex; gap: 12px; margin-top: 26px; flex-wrap: wrap; }
+
+  /* 상품 카드 */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column; transition: .25s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 18px 40px rgba(90,65,25,.16); }
+  .thumb {
+    aspect-ratio: 4 / 3; display: grid; place-items: center; position: relative;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+  }
+  .thumb { overflow: hidden; }
+  .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 22px; transition: transform .3s; }
+  .card:hover .thumb img { transform: scale(1.05); }
+  .tag {
+    position: absolute; z-index: 2; top: 14px; left: 14px; background: var(--accent); color: #fffaf0;
+    font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 999px; letter-spacing: .04em;
+  }
+  .card-body { padding: 20px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .brand { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  .card h3 { font-size: 17px; line-height: 1.4; letter-spacing: -.01em; }
+  .card p { color: var(--muted); font-size: 14px; flex: 1; }
+  .card .go { margin-top: 12px; font-size: 14px; font-weight: 700; color: var(--accent-2); }
+  .card .go::after { content: " →"; transition: margin .2s; }
+  .card:hover .go::after { margin-left: 4px; }
+
+  /* 브랜드 */
+  .brands { display: flex; flex-wrap: wrap; gap: 12px; }
+  .brands a {
+    padding: 12px 22px; border: 1px solid var(--line); border-radius: 999px;
+    background: var(--panel); font-weight: 700; font-size: 15px; transition: .2s;
+  }
+  .brands a:hover { border-color: var(--accent); color: var(--accent-2); }
+
+  /* 혜택 배너 */
+  .promo {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  }
+  .promo a {
+    border-radius: var(--radius); padding: 34px; border: 1px solid var(--line);
+    background: linear-gradient(135deg, var(--panel-2), var(--panel)); transition: .2s; display: block;
+  }
+  .promo a:hover { border-color: var(--accent); }
+  .promo small { color: var(--accent); font-weight: 700; letter-spacing: .12em; font-size: 12px; }
+  .promo h3 { font-size: 22px; margin: 8px 0 6px; letter-spacing: -.02em; }
+  .promo p { color: var(--muted); font-size: 14px; }
+
+  /* 푸터 */
+  footer { border-top: 1px solid var(--line); margin-top: 40px; padding: 36px 0 48px; color: var(--muted); font-size: 13px; }
+  footer .cols { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  footer b { color: var(--text); }
+  footer .links { display: flex; gap: 18px; flex-wrap: wrap; }
+  footer .links a:hover { color: var(--text); }
+  .disclaimer { margin-top: 20px; padding-top: 18px; border-top: 1px dashed var(--line); line-height: 1.7; }
+
+  /* 반응형 */
+  @media (max-width: 960px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .vinyl-stage { order: -1; }
+    .experts, .voices { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    nav { display: none; }
+  }
+  @media (max-width: 600px) {
+    .wrap { padding: 0 16px; }
+    .grid, .promo { grid-template-columns: 1fr; }
+    .search input { width: 140px; }
+    .hero { padding-top: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="notice">포토후기 작성 시 최대 10,000원 · 회원가입 5,000원 할인 쿠폰 — 혜택은 오디오몰에서 확인하세요</div>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top">radio<b>7</b></a>
+    <nav>
+      <a href="#picks">추천 상품</a>
+      <a href="#experts">큐레이터</a>
+      <a href="#voices">후기</a>
+      <a href="#brands">브랜드</a>
+      <a href="#benefit">혜택</a>
+    </nav>
+    <form class="search" action="https://audiomall.co.kr/product/search.html" method="get" target="_blank" rel="noopener">
+      <input type="search" name="keyword" placeholder="브랜드·모델 검색" aria-label="상품 검색">
+      <button type="submit">검색</button>
+    </form>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 히어로 -->
+  <div class="wrap hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Hi-Fi · Home Theater</div>
+        <h1>소리에 집중하는<br><em>하이파이 셀렉션</em></h1>
+        <p>턴테이블, 인티앰프, 스트리밍 플레이어, 스피커까지. 오디오몰의 상품을 더 차분하고 보기 쉽게 모았습니다.</p>
+        <div class="cta">
+          <a class="btn primary" href="#picks">추천 상품 보기</a>
+          <a class="btn ghost" href="https://audiomall.co.kr/product/list100.html?cate_no=53" target="_blank" rel="noopener">베스트 전체 보기 ↗</a>
+        </div>
+      </div>
+      <div class="vinyl-stage" aria-hidden="true"><div class="vinyl"></div></div>
+    </div>
+  </div>
+
+  <!-- 전문가 소개 -->
+  <section id="experts">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><h2>듣는 사람이 고릅니다</h2><p>숫자보다 소리, 소리보다 음악. radio7의 큐레이터를 소개합니다.</p></div>
+        <span class="sample">시안용 샘플</span>
+      </div>
+      <div class="experts">
+        <article class="expert">
+          <div class="avatar">A</div>
+          <div class="role">아날로그 큐레이터</div>
+          <h3>바늘이 내려앉는 순간을 좋아합니다</h3>
+          <p>"좋은 턴테이블은 음악을 더 크게 만들지 않고, 더 가깝게 만듭니다." 레코드 한 장을 끝까지 듣게 만드는 구성을 고릅니다.</p>
+          <div class="chips"><span>턴테이블</span><span>카트리지</span><span>포노앰프</span></div>
+        </article>
+        <article class="expert">
+          <div class="avatar">B</div>
+          <div class="role">스트리밍 · 디지털 큐레이터</div>
+          <h3>거실에서 가장 편한 하이파이</h3>
+          <p>"복잡한 배선 없이도 좋은 소리는 가능합니다." 앱 하나로 시작해 오래 쓰는 시스템을 제안합니다.</p>
+          <div class="chips"><span>네트워크 플레이어</span><span>인티앰프</span><span>DAC</span></div>
+        </article>
+        <article class="expert">
+          <div class="avatar">C</div>
+          <div class="role">스피커 · 공간 큐레이터</div>
+          <h3>방의 크기에서 시작합니다</h3>
+          <p>"스피커는 방과 함께 완성됩니다." 청취 거리와 공간에 맞는 균형을 먼저 묻습니다.</p>
+          <div class="chips"><span>톨보이</span><span>북쉘프</span><span>홈시어터</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 추천 상품 -->
+  <section id="picks">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><h2>추천 상품</h2><p>상품을 누르면 오디오몰 상품 페이지가 새 창으로 열립니다.</p></div>
+        <a class="more" href="https://audiomall.co.kr/han/html/mainitems.html?group=1" target="_blank" rel="noopener">신상품 더보기 ↗</a>
+      </div>
+
+      <div class="grid">
+
+        <a class="card" href="https://audiomall.co.kr/product/%EC%BF%BC%EB%93%9Cquad-quad-3-dac-%EB%82%B4%EC%9E%A5-%EB%B8%94%EB%A3%A8%ED%88%AC%EC%8A%A4-%EC%9D%B8%ED%8B%B0%EC%95%B0%ED%94%84/312/category/49/display/1/" target="_blank" rel="noopener">
+          <div class="thumb">
+            <span class="tag">AMP</span>
+            <img src="images/quad.jpg" alt="쿼드 QUAD 3" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="brand">Quad</div>
+            <h3>쿼드 QUAD 3 DAC 내장 블루투스 인티앰프</h3>
+            <p>DAC와 블루투스를 내장한 인티앰프.</p>
+            <div class="go">상품 보기</div>
+          </div>
+        </a>
+
+        <a class="card" href="https://audiomall.co.kr/product/%ED%86%A0%EB%A0%8C%EC%8A%A4-thorens-td-402-dd-%EB%8B%A4%EC%9D%B4%EB%A0%89%ED%8A%B8-%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B8%8C-%ED%84%B4%ED%85%8C%EC%9D%B4%EB%B8%94/319/category/76/display/1/" target="_blank" rel="noopener">
+          <div class="thumb">
+            <span class="tag">TURNTABLE</span>
+            <img src="images/thorens.jpg" alt="토렌스 TD 402 DD" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="brand">Thorens</div>
+            <h3>토렌스 THORENS TD 402 DD 다이렉트 드라이브 턴테이블</h3>
+            <p>다이렉트 드라이브 방식의 턴테이블.</p>
+            <div class="go">상품 보기</div>
+          </div>
+        </a>
+
+        <a class="card" href="https://audiomall.co.kr/product/%EC%97%90%EB%B2%84%EC%86%94%EB%A1%9Ceversolo-play-%EC%98%AC%EC%9D%B8%EC%9B%90-%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC-%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D-%EC%9D%B8%ED%8B%B0%EC%95%B0%ED%94%84/316/category/49/display/1/" target="_blank" rel="noopener">
+          <div class="thumb">
+            <span class="tag">STREAMING</span>
+            <img src="images/eversolo.png" alt="에버솔로 PLAY" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="brand">Eversolo</div>
+            <h3>에버솔로 EVERSOLO PLAY 올인원 네트워크 스트리밍 인티앰프</h3>
+            <p>스트리밍과 앰프를 하나로 합친 올인원.</p>
+            <div class="go">상품 보기</div>
+          </div>
+        </a>
+
+        <a class="card" href="https://audiomall.co.kr/product/%EC%86%9C%EC%98%A4%EB%94%94%EC%98%A4-sotm-sms-2000-%EC%9D%8C%EC%95%85-%EC%84%9C%EB%B2%84%EC%99%80-%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC-%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4/261/category/53/display/1/" target="_blank" rel="noopener">
+          <div class="thumb">
+            <span class="tag">NETWORK</span>
+            <img src="images/sotm.png" alt="SOtM sMS-2000" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="brand">SOtM</div>
+            <h3>소오디오 SOtM SMS-2000 음악 서버와 네트워크 플레이어</h3>
+            <p>음악 서버와 네트워크 플레이어.</p>
+            <div class="go">상품 보기</div>
+          </div>
+        </a>
+
+        <a class="card" href="https://audiomall.co.kr/product/%EB%AA%A8%EB%8B%88%ED%84%B0%EC%98%A4%EB%94%94%EC%98%A4-monitor-audio-%EC%8B%A4%EB%B2%84-500-8g-silver-500-8g-%EB%93%80%EC%96%BC-8%EC%9D%B8%EC%B9%98-c-cam-rst-iii-3%EC%9B%A8%EC%9D%B4-/484/category/55/display/1/" target="_blank" rel="noopener">
+          <div class="thumb">
+            <span class="tag">SPEAKER</span>
+            <img src="images/monitor.jpg" alt="모니터오디오 Silver 500 8G" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="brand">Monitor Audio</div>
+            <h3>모니터오디오 Monitor Audio 실버 500 8G · 듀얼 8인치 3웨이 톨보이 스피커</h3>
+            <p>C-CAM RST III 3웨이 톨보이 스피커.</p>
+            <div class="go">상품 보기</div>
+          </div>
+        </a>
+
+        <a class="card" href="https://audiomall.co.kr/product/%EB%93%80%EC%96%BC-dual-cs-429-%EC%9E%90%EB%8F%99-%EB%8B%A4%EC%9D%B4%EB%A0%89%ED%8A%B8-%EB%B2%A8%ED%8A%B8-%ED%84%B4%ED%85%8C%EC%9D%B4%EB%B8%94-%ED%8F%AC%EB%85%B8%EC%95%B0%ED%94%84-%EC%98%A4%ED%86%A0%ED%8F%B0-2m-red-%EC%B9%B4%ED%8A%B8%EB%A6%AC%EC%A7%80-%EB%82%B4%EC%9E%A5/46/category/53/display/1/" target="_blank" rel="noopener">
+          <div class="thumb">
+            <span class="tag">ANALOG</span>
+            <img src="images/dual.jpg" alt="듀얼 CS-429" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="brand">Dual</div>
+            <h3>듀얼 DUAL CS-429 자동 다이렉트 벨트 턴테이블</h3>
+            <p>포노앰프와 오토폰 2M RED 카트리지 내장.</p>
+            <div class="go">상품 보기</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 사용자 후기 -->
+  <section id="voices">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><h2>들어본 분들의 이야기</h2><p>소리가 바꿔 놓은 저녁 시간.</p></div>
+        <span class="sample">시안용 샘플</span>
+      </div>
+      <div class="voices">
+        <figure class="voice has-photo">
+          <div class="photo"><img src="images/dual.jpg" alt="후기 사진: 턴테이블" loading="lazy"><span class="photo-tag">포토후기</span></div>
+          <div class="stars" aria-label="별점 5점">★★★★★</div>
+          <blockquote>"퇴근하고 레코드 한 면을 듣는 게 하루의 마침표가 됐어요. 소리가 이렇게 따뜻할 줄 몰랐습니다."</blockquote>
+          <figcaption><b>턴테이블 구매자</b><span>샘플 후기</span></figcaption>
+        </figure>
+        <figure class="voice">
+          <div class="stars" aria-label="별점 5점">★★★★★</div>
+          <blockquote>"설정이 정말 간단했어요. 앱으로 음악을 고르는데, 거실 공기가 달라지는 느낌입니다."</blockquote>
+          <figcaption><b>스트리밍 앰프 구매자</b><span>샘플 후기</span></figcaption>
+        </figure>
+        <figure class="voice">
+          <div class="stars" aria-label="별점 5점">★★★★★</div>
+          <blockquote>"익숙한 곡인데 처음 듣는 소리가 났어요. 괜히 아는 노래를 다시 틀어 보게 됩니다."</blockquote>
+          <figcaption><b>스피커 구매자</b><span>샘플 후기</span></figcaption>
+        </figure>
+      </div>
+      <div class="voices-more">
+        <a class="btn ghost" href="https://audiomall.co.kr/board/product2/listhan.html?board_no=4" target="_blank" rel="noopener">실제 포토후기 보기 ↗</a>
+        <a class="btn ghost" href="https://audiomall.co.kr/board/gallery2/list.html?board_no=12&amp;category_no=1" target="_blank" rel="noopener">제품 리뷰 보기 ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 브랜드 -->
+  <section id="brands">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><h2>브랜드</h2><p>브랜드를 누르면 오디오몰 검색 결과로 이동합니다.</p></div>
+      </div>
+      <div class="brands">
+        <a href="https://audiomall.co.kr/product/search.html?keyword=%EC%97%90%EB%B2%84%EC%86%94%EB%A1%9C" target="_blank" rel="noopener">에버솔로</a>
+        <a href="https://audiomall.co.kr/product/search.html?keyword=%ED%86%A0%EB%A0%8C%EC%8A%A4" target="_blank" rel="noopener">토렌스</a>
+        <a href="https://audiomall.co.kr/product/search.html?keyword=%EC%BF%BC%EB%93%9C" target="_blank" rel="noopener">쿼드</a>
+        <a href="https://audiomall.co.kr/product/search.html?keyword=%EB%AA%A8%EB%8B%88%ED%84%B0%EC%98%A4%EB%94%94%EC%98%A4" target="_blank" rel="noopener">모니터오디오</a>
+        <a href="https://audiomall.co.kr/product/search.html?keyword=%EB%93%80%EC%96%BC" target="_blank" rel="noopener">듀얼</a>
+        <a href="https://audiomall.co.kr/product/search.html?keyword=%EC%97%90%EC%8A%A4%ED%94%BC%EC%97%98" target="_blank" rel="noopener">SPL</a>
+        <a href="https://audiomall.co.kr/product/search.html?keyword=%EB%A7%88%EA%B7%B8%EB%82%AB" target="_blank" rel="noopener">마그낫</a>
+        <a href="https://audiomall.co.kr/product/search.html?keyword=%EC%B9%B4%ED%8A%B8%EB%A6%AC%EC%A7%80" target="_blank" rel="noopener">카트리지</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 혜택 -->
+  <section id="benefit">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><h2>혜택</h2></div>
+        <a class="more" href="https://audiomall.co.kr/han/html/eventlist.html" target="_blank" rel="noopener">이달의 이벤트 ↗</a>
+      </div>
+      <div class="promo">
+        <a href="https://audiomall.co.kr/board/product2/listhan.html?board_no=4" target="_blank" rel="noopener">
+          <small>PHOTO REVIEW</small>
+          <h3>포토후기 작성 시 최대 10,000원</h3>
+          <p>구매 후 후기를 남기면 적립금을 드립니다.</p>
+        </a>
+        <a href="https://audiomall.co.kr/coupon/coupon_zone.html" target="_blank" rel="noopener">
+          <small>WELCOME COUPON</small>
+          <h3>회원가입 5,000원 할인 쿠폰</h3>
+          <p>모바일·이메일 수신 동의 시 지급됩니다.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div><b>radio7</b><br>하이파이 오디오 셀렉션 (프로토타입)</div>
+      <div class="links">
+        <a href="https://audiomall.co.kr" target="_blank" rel="noopener">오디오몰 바로가기</a>
+        <a href="https://audiomall.co.kr/board/index.html" target="_blank" rel="noopener">고객센터</a>
+        <a href="https://audiomall.co.kr/myshop/index.html" target="_blank" rel="noopener">마이페이지</a>
+      </div>
+    </div>
+    <p class="disclaimer">
+      이 페이지는 UI/UX 시안(프로토타입)입니다. 상품 정보, 가격, 재고, 결제와 배송은 모두 오디오몰(audiomall.co.kr)에서 제공·처리됩니다.
+      전문가 소개와 사용자 후기는 시안용 샘플 문구이며 실제 인물·구매자와 무관합니다. 상품 이미지는 오디오몰의 허락을 받아 사용했으며, 저작권은 각 제조사와 오디오몰에 있습니다.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
