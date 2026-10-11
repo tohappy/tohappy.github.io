@@ -181,9 +181,145 @@
   document.getElementById("dealSale").addEventListener("change", renderChart);
   document.getElementById("dealJeonse").addEventListener("change", renderChart);
 
+  // ---------- 6. 두 단지 비교 테이블 (계약일 | 퍼스티지 | 원베일리 | 갭) ----------
+  function findUnit(unitId) {
+    for (const complex of APT_DATA.complexes) {
+      const unit = complex.units.find((u) => u.id === unitId);
+      if (unit) return { complex, unit };
+    }
+    return null;
+  }
+
+  function buildCmpTable() {
+    const wrap = document.getElementById("cmpTableWrap");
+    const moreBtn = document.getElementById("cmpMoreBtn");
+    if (!wrap || !CMP_TABLE_CONFIG) return;
+
+    const [idA, idB] = CMP_TABLE_CONFIG.unitIds;
+    const a = findUnit(idA); // 퍼스티지 59
+    const b = findUnit(idB); // 원베일리 59
+
+    // 날짜별 매매가 맵 + 날짜 내림차순(최신순) 정렬 리스트
+    const mapA = {}, mapB = {};
+    a.unit.sale.forEach((p) => (mapA[p.date] = p.price));
+    b.unit.sale.forEach((p) => (mapB[p.date] = p.price));
+
+    const datesA = Object.keys(mapA).sort().reverse();
+    const datesB = Object.keys(mapB).sort().reverse();
+    const allDates = Array.from(new Set([...datesA, ...datesB])).sort().reverse();
+
+    // 전체 구간 10분위 경계 계산 (두 단지 매매가 전체 기준)
+    const allPrices = [...Object.values(mapA), ...Object.values(mapB)];
+    const minP = Math.min(...allPrices);
+    const maxP = Math.max(...allPrices);
+    const width = (maxP - minP) / 10;
+    function decileOf(v) {
+      if (width === 0) return 1;
+      return Math.min(9, Math.floor((v - minP) / width)) + 1;
+    }
+
+    // 각 단지별로 "직전(더 과거) 거래 대비 분위 변화" 미리 계산
+    function buildDecileChangeMap(dates, map) {
+      const result = {};
+      for (let i = 0; i < dates.length - 1; i++) {
+        const curDate = dates[i];
+        const prevDate = dates[i + 1]; // 더 과거
+        const curV = map[curDate];
+        const prevV = map[prevDate];
+        const dCur = decileOf(curV);
+        const dPrev = decileOf(prevV);
+        if (dCur !== dPrev) {
+          result[curDate] = { prev: prevV, curr: curV, dir: dCur > dPrev ? "up" : "down" };
+        }
+      }
+      return result;
+    }
+    const decileChangeA = buildDecileChangeMap(datesA, mapA);
+    const decileChangeB = buildDecileChangeMap(datesB, mapB);
+
+    const floorInfoA = (CMP_FLOOR_INFO && CMP_FLOOR_INFO[idA]) || {};
+    const floorInfoB = (CMP_FLOOR_INFO && CMP_FLOOR_INFO[idB]) || {};
+    function isLowFloor(info) {
+      return info && info.floor != null && info.floor <= 5;
+    }
+
+    function renderPriceCell(date, price, floorInfo, decileChange) {
+      if (price == null) return "-";
+      let html = `<div class="price-cell"><span>${price.toFixed(1)}억`;
+      if (floorInfo && floorInfo.floor != null) html += ` (${floorInfo.floor}층)`;
+      if (isLowFloor(floorInfo)) html += ` <span class="floor-tag">저층</span>`;
+      html += `</span>`;
+      if (decileChange) {
+        html += `<span class="decile-tag ${decileChange.dir}">${decileChange.prev.toFixed(1)}억 &gt; ${decileChange.curr.toFixed(1)}억</span>`;
+      }
+      html += `</div>`;
+      return html;
+    }
+
+    const defaultFrom = CMP_TABLE_CONFIG.defaultFromDate;
+    let expanded = false;
+
+    function render() {
+      const visibleDates = expanded ? allDates : allDates.filter((d) => d >= defaultFrom);
+
+      const rows = visibleDates.map((date) => {
+        const priceA = mapA[date] ?? null;
+        const priceB = mapB[date] ?? null;
+        const lowFloor = isLowFloor(floorInfoA[date]) || isLowFloor(floorInfoB[date]);
+
+        let gapCell = '<span class="gap-na">-</span>';
+        if (priceA != null && priceB != null) {
+          if (lowFloor) {
+            gapCell = '<span class="gap-na">제외(저층)</span>';
+          } else {
+            const gap = priceB - priceA;
+            gapCell = `${gap >= 0 ? "+" : ""}${gap.toFixed(1)}억`;
+          }
+        }
+
+        return `<tr>
+          <td>${date.replace("-", ".")}</td>
+          <td>${renderPriceCell(date, priceA, floorInfoA[date], decileChangeA[date])}</td>
+          <td>${renderPriceCell(date, priceB, floorInfoB[date], decileChangeB[date])}</td>
+          <td>${gapCell}</td>
+        </tr>`;
+      });
+
+      wrap.innerHTML = `
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th>계약일</th>
+              <th class="highlight-blue">${a.complex.name}</th>
+              <th class="highlight-red">${b.complex.name}</th>
+              <th>갭 (${b.complex.name}−${a.complex.name})</th>
+            </tr>
+          </thead>
+          <tbody>${rows.join("")}</tbody>
+        </table>
+      `;
+
+      if (moreBtn) {
+        moreBtn.textContent = expanded
+          ? "접기 (최근 구간만 보기)"
+          : `더보기 (${a.complex.builtYear}년 입주 이후 전체 보기 · 총 ${allDates.length}개월)`;
+      }
+    }
+
+    if (moreBtn) {
+      moreBtn.addEventListener("click", () => {
+        expanded = !expanded;
+        render();
+      });
+    }
+
+    render();
+  }
+
   // ---------- 초기화 ----------
   buildControls();
   renderChart();
+  buildCmpTable();
 
   // chart.resize 대응 (캔버스 높이 고정 컨테이너)
   window.addEventListener("resize", () => chart && chart.resize());

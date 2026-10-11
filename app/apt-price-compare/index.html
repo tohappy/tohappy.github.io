@@ -53,35 +53,17 @@
   <!-- 비교 내용 -->
   <section class="panel">
     <h2>두 단지 비교 — 전용 59㎡(24평형) 기준 시간순 흐름</h2>
-    <table class="cmp-table">
-      <thead>
-        <tr>
-          <th>계약일</th>
-          <th class="highlight-blue">퍼스티지</th>
-          <th class="highlight-red">원베일리</th>
-          <th>갭 (원베일리−퍼스티지)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>2020.05</td><td>19.1억 (3층) <span class="floor-tag">저층</span></td><td>-</td><td class="gap-na">-</td></tr>
-        <tr><td>2023.06</td><td>-</td><td>26.9억 (15층)</td><td class="gap-na">-</td></tr>
-        <tr><td>2025.06</td><td>-</td><td>44.5억 (25층)</td><td class="gap-na">-</td></tr>
-        <tr><td>2025.08</td><td>-</td><td>42.5억 (12층)</td><td class="gap-na">-</td></tr>
-        <tr><td>2025.11</td><td>39.5억 (28층)</td><td>46.6억 (평균 25~33층)</td><td>+7.1억</td></tr>
-        <tr><td>2025.12</td><td>40.8억 (2층) <span class="floor-tag">저층</span></td><td>-</td><td class="gap-na">제외(저층)</td></tr>
-        <tr><td>2026.01</td><td>43.5억 (21층)</td><td>-</td><td class="gap-na">-</td></tr>
-        <tr><td>2026.02</td><td>44.5억 (15층)</td><td><b>49.5억 (20층, 전고점)</b></td><td>+5.0억</td></tr>
-        <tr><td>2026.04</td><td>40.2억 (6층)</td><td>-</td><td class="gap-na">-</td></tr>
-        <tr><td>2026.05</td><td>37.2억 (4층) <span class="floor-tag">저층</span></td><td>47.5억 (평균 12·23층)</td><td class="gap-na">제외(저층)</td></tr>
-        <tr><td>2026.06</td><td>-</td><td>46.0억 (32층)</td><td class="gap-na">-</td></tr>
-        <tr><td>2026.08</td><td>-</td><td>47.0억 (21층)</td><td class="gap-na">-</td></tr>
-        <tr><td>2026.09</td><td>41.8억 (15층)</td><td>-</td><td class="gap-na">-</td></tr>
-      </tbody>
-    </table>
+    <div id="cmpTableWrap"></div>
+    <div style="text-align:center; margin-top:10px;">
+      <button id="cmpMoreBtn" type="button" class="more-btn">더보기 (2009년 입주 이후 전체 보기)</button>
+    </div>
     <p class="legend-note">
       괄호 안은 거래 층수입니다. <span class="floor-tag">저층</span>(5층 이하) 거래는 동일 평형이라도
       저층 할인이 섞여 단지 간 가격 비교가 왜곡되므로 갭 계산에서 제외했습니다.
       갭은 같은 계약월에 양쪽 모두 거래가 있는 경우에만 계산했습니다.
+      <span class="decile-tag up">33억 &gt; 36억</span> / <span class="decile-tag down">44억 &gt; 40억</span> 처럼
+      생긴 표시는 전체 구간(12.5억~49.5억)을 10분위로 나눴을 때, 직전 거래보다 분위가 한 단계 이상
+      바뀐 지점을 나타냅니다.
     </p>
 
     <p>
