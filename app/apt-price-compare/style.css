@@ -165,6 +165,19 @@ table.cmp-table th {
 .highlight-blue { color: var(--accent-blue); font-weight: 600; }
 .highlight-red { color: var(--accent-red); font-weight: 600; }
 
+.floor-tag {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #92400e;
+  background: #fef3c7;
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin-left: 4px;
+}
+
+.gap-na { color: var(--text-muted); font-style: italic; }
+
 .conclusion {
   background: #fff7ed;
   border: 1px solid #fed7aa;
