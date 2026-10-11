@@ -17,9 +17,16 @@
   <!-- 선택 컨트롤 -->
   <section class="panel">
     <h2>비교 대상 선택</h2>
+    <div class="control-group" style="margin-bottom:16px;">
+      <div class="group-title">아파트 검색</div>
+      <div class="search-wrap">
+        <input type="text" id="aptSearchInput" placeholder="아파트명 검색 (예: 래미안퍼스티지, 래미안원베일리)" autocomplete="off" />
+        <div id="aptSearchResults" class="search-results"></div>
+      </div>
+    </div>
     <div class="controls-grid">
       <div class="control-group">
-        <div class="group-title">아파트 · 평형</div>
+        <div class="group-title">선택된 아파트 · 평형</div>
         <div id="aptControls"></div>
       </div>
       <div class="control-group">
@@ -52,19 +59,8 @@
 
   <!-- 비교 내용 -->
   <section class="panel">
-    <h2>두 단지 비교 — 전용 59㎡(24평형) 기준 시간순 흐름</h2>
-    <div id="cmpTableWrap"></div>
-    <div style="text-align:center; margin-top:10px;">
-      <button id="cmpMoreBtn" type="button" class="more-btn">더보기 (2009년 입주 이후 전체 보기)</button>
-    </div>
-    <p class="legend-note">
-      괄호 안은 거래 층수입니다. <span class="floor-tag">저층</span>(5층 이하) 거래는 동일 평형이라도
-      저층 할인이 섞여 단지 간 가격 비교가 왜곡되므로 갭 계산에서 제외했습니다.
-      갭은 같은 계약월에 양쪽 모두 거래가 있는 경우에만 계산했습니다.
-      <span class="decile-tag up">33억 &gt; 36억</span> / <span class="decile-tag down">44억 &gt; 40억</span> 처럼
-      생긴 표시는 전체 구간(12.5억~49.5억)을 10분위로 나눴을 때, 직전 거래보다 분위가 한 단계 이상
-      바뀐 지점을 나타냅니다.
-    </p>
+    <h2>평형별 비교 — 선택한 아파트 기준 시간순 흐름</h2>
+    <div id="cmpTablesRoot"></div>
 
     <p>
       <strong>출발점 격차.</strong> 원베일리는 2023년 입주 당시(26.9억 · 평당 1.48억)부터

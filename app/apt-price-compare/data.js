@@ -19,6 +19,7 @@ const APT_DATA = {
           id: "persigy-59",
           label: "24평형 (전용 59㎡)",
           area: 59.89,
+          pyeongGroup: "59",
           color: "#2563eb", // blue
           // 2016-09 ~ 2025-01 구간은 월별 평균(건수 1건 이상), 이후는 개별 거래 기준
           sale: [
@@ -104,6 +105,7 @@ const APT_DATA = {
           id: "persigy-84",
           label: "34평형 (전용 84㎡)",
           area: 84.93,
+          pyeongGroup: "84",
           color: "#16a34a", // green
           sale: [
             { date: "2026-02", price: 57.0 },
@@ -130,6 +132,7 @@ const APT_DATA = {
           id: "onebailey-59",
           label: "24평형 (전용 59㎡)",
           area: 59.96,
+          pyeongGroup: "59",
           color: "#dc2626", // red
           sale: [
             { date: "2023-06", price: 26.9 },
@@ -150,6 +153,7 @@ const APT_DATA = {
           id: "onebailey-84",
           label: "34평형 (전용 84㎡)",
           area: 84.97,
+          pyeongGroup: "84",
           color: "#ea580c", // orange
           sale: [
             { date: "2025-05", price: 60.0 },
@@ -188,8 +192,5 @@ const CMP_FLOOR_INFO = {
   }
 };
 
-// 비교 테이블에 쓸 두 단지(59㎡) 식별자와, 기본으로 접어서 보여줄 기준 월
-const CMP_TABLE_CONFIG = {
-  unitIds: ["persigy-59", "onebailey-59"],
-  defaultFromDate: "2023-06" // 이 월 이후만 기본 노출, 이전은 "더보기"로 펼침
-};
+// 비교 테이블에서 "저층 할인 제외" 판정 기준 (5층 이하)
+const CMP_LOW_FLOOR_MAX = 5;
