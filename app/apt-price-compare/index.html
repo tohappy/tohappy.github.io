@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>반포 아파트 시세 비교 — 래미안퍼스티지 vs 래미안원베일리</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-head">
+    <h1>반포 아파트 시세 비교</h1>
+    <p>래미안퍼스티지(2009년식) · 래미안원베일리(2023년식) — 서초구 반포동 · 전용 59㎡ / 84㎡ 기준</p>
+  </header>
+
+  <!-- 선택 컨트롤 -->
+  <section class="panel">
+    <h2>비교 대상 선택</h2>
+    <div class="controls-grid">
+      <div class="control-group">
+        <div class="group-title">아파트 · 평형</div>
+        <div id="aptControls"></div>
+      </div>
+      <div class="control-group">
+        <div class="group-title">가격 기준</div>
+        <div class="radio-row">
+          <label><input type="radio" name="basis" value="price" checked /> 시세 (억원)</label>
+          <label><input type="radio" name="basis" value="pyeong" /> 평단가 (억원/평)</label>
+        </div>
+        <div class="group-title" style="margin-top:10px;">거래 유형</div>
+        <div class="check-row">
+          <label><input type="checkbox" id="dealSale" checked /> 매매</label>
+          <label><input type="checkbox" id="dealJeonse" checked /> 전세</label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 차트 -->
+  <section class="panel">
+    <h2>시세 변화 추이 (가로축: 계약 연-월)</h2>
+    <div style="position:relative; height:420px;">
+      <canvas id="priceChart"></canvas>
+    </div>
+    <p class="legend-note">
+      실선 = 매매, 점선 = 전세. 평단가는 전용면적 기준(1평=3.3058㎡)으로 환산했습니다.
+      데이터는 국토교통부 실거래가 공개시스템을 집계하는 민간 사이트(영끌했다, 실거래가Pro 등)에서
+      2026-10-11 기준으로 수동 수집한 값이며 호가가 아닌 신고가 기준입니다.
+    </p>
+  </section>
+
+  <!-- 비교 내용 -->
+  <section class="panel">
+    <h2>두 단지 비교 — 전용 59㎡(24평형) 기준 시간순 흐름</h2>
+    <table class="cmp-table">
+      <thead>
+        <tr><th>계약일</th><th>단지</th><th>거래가</th><th>평단가</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2023.06</td><td>원베일리</td><td>26.9억</td><td>1.48억</td></tr>
+        <tr><td>2025.06</td><td>원베일리</td><td>44.5억</td><td>2.45억</td></tr>
+        <tr><td>2025.08</td><td>원베일리</td><td>42.5억</td><td>2.34억</td></tr>
+        <tr><td>2025.11</td><td><span class="highlight-blue">퍼스티지</span></td><td>39.5억</td><td>2.18억</td></tr>
+        <tr><td>2025.11</td><td>원베일리</td><td>46.6억</td><td>2.57억</td></tr>
+        <tr><td>2025.12</td><td><span class="highlight-blue">퍼스티지</span></td><td>40.8억</td><td>2.25억</td></tr>
+        <tr><td>2026.01</td><td><span class="highlight-blue">퍼스티지</span></td><td>43.5억</td><td>2.40억</td></tr>
+        <tr><td>2026.02</td><td><span class="highlight-blue">퍼스티지</span></td><td>44.5억</td><td>2.46억</td></tr>
+        <tr><td>2026.02</td><td>원베일리</td><td><b>49.5억 (전고점)</b></td><td>2.73억</td></tr>
+        <tr><td>2026.04</td><td><span class="highlight-blue">퍼스티지</span></td><td>40.2억</td><td>2.22억</td></tr>
+        <tr><td>2026.05</td><td><span class="highlight-blue">퍼스티지</span></td><td>37.2억</td><td>2.05억</td></tr>
+        <tr><td>2026.05</td><td>원베일리</td><td>47.5억</td><td>2.62억</td></tr>
+        <tr><td>2026.06</td><td>원베일리</td><td>46.0억</td><td>2.54억</td></tr>
+        <tr><td>2026.08</td><td>원베일리</td><td>47.0억</td><td>2.59억</td></tr>
+        <tr><td>2026.09</td><td><span class="highlight-blue">퍼스티지</span></td><td>41.8억</td><td>2.31억</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      <strong>출발점 격차.</strong> 원베일리는 2023년 입주 당시(26.9억 · 평당 1.48억)부터
+      14년 선배 단지인 퍼스티지의 당시 시세보다 높은 궤적에서 출발했습니다.
+    </p>
+    <p>
+      <strong>동반 급등, 같은 달 전고점.</strong> 두 단지 모두 2026년 2월 전후로
+      거의 같은 시점에 전고점을 찍었습니다 — 퍼스티지 44.5억(평당 2.46억),
+      원베일리 49.5억(평당 2.73억). 강남3구 상승장에 같은 방향으로 올라탄 흐름입니다.
+    </p>
+    <p>
+      <strong>격차는 평당 약 0.25~0.35억(2,500만~3,500만원) 선에서 고정적.</strong>
+      신축 프리미엄(2023년 대 2009년, 14년 차)이 가격에 꾸준히 녹아 있는 구조입니다.
+    </p>
+    <p>
+      <strong>고점 이후 조정, 그러나 하락 폭은 다름.</strong>
+      퍼스티지는 전고점 대비 <span class="highlight-red">-6.9%</span>까지 밀렸고,
+      원베일리는 <span class="highlight-red">-1.1%</span> 수준으로 상대적으로 버티는 모습입니다.
+      신축이 구축보다 하락장에서 더 방어적으로 움직이는 패턴입니다.
+    </p>
+  </section>
+
+  <!-- 결론 -->
+  <section class="panel conclusion">
+    <h3>결론</h3>
+    <ul class="tight">
+      <li>두 단지는 같은 상승·하락 사이클을 함께 타면서도, 원베일리가 평당 기준으로 꾸준히 한 체급 위(약 +25~35%)를 유지합니다.</li>
+      <li>2026년 2월이 공동 전고점이었고, 이후 두 단지 모두 조정 국면에 들어갔습니다.</li>
+      <li>조정 폭은 구축(퍼스티지)이 더 크고, 신축(원베일리)이 상대적으로 가격을 잘 지키고 있습니다 — 신축 프리미엄이 하락장에서 완충 역할을 하는 것으로 보입니다.</li>
+      <li>84㎡ 평형에서도 같은 패턴이 반복됩니다: 원베일리가 평당가에서 앞서고, 조정기에 퍼스티지보다 덜 흔들립니다.</li>
+      <li>전세가율(30% 중후반)과 매매-전세 갭(25~39억)은 두 단지 모두 비슷한 수준이라, 갭투자 매력도보다는 실거주 수요 중심의 시장으로 해석됩니다.</li>
+    </ul>
+  </section>
+
+  <footer class="page-foot">
+    데이터 출처: 국토교통부 실거래가 공개시스템 기반 민간 집계 사이트 (영끌했다, 실거래가Pro 등) · 2026-10-11 기준 수동 수집 · 호가 아닌 신고가 기준
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
