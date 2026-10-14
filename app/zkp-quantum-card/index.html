@@ -200,9 +200,9 @@
       <div class="inner">
         <div class="section-head">
           <span class="kicker">왜 지금인가?</span>
-          <h2>양자컴퓨터가 온다 — 지금 대비하지 않으면 늦습니다</h2>
-          <p>현재 군사 통신·드론 인증에 쓰이는 RSA·ECDSA는 양자컴퓨터 앞에서 수초 내 해독됩니다.
-            KCMVP 중앙집중식 시스템의 한계를 극복할 분산형 ZKP 체계가 필요합니다.</p>
+          <h2>현재 암호체계의 한계</h2>
+          <p>군사 통신과 드론 인증에 쓰이는 RSA·ECDSA는 양자컴퓨터로 수초 내 해독이 가능해집니다.
+            분산형 ZKP 체계는 이 공백을 보완하는 방법입니다.</p>
         </div>
         <div class="card-grid" style="grid-template-columns: repeat(5,1fr);">
           <div class="card timeline-card">
@@ -229,10 +229,9 @@
       <div class="inner">
         <div class="section-head">
           <span class="kicker">ZKP란?</span>
-          <h2>"증명하되, 아무것도 보여주지 않는다"</h2>
-          <p>영지식증명(Zero-Knowledge Proof)은 어떤 사실이 참임을 증명하면서도, 그 증거가 되는 원본 데이터를
-            전혀 노출하지 않는 수학적 기법입니다. 🚁 드론이 "나는 적법한 임무 명령을 받은 아군 드론이다"를 증명해야 할 때 —
-            기존 방식은 임무 명령서 전체를 전송해 감청 시 전부 노출되지만, ZKP 방식은 증명 π만 전송해 임무 데이터 0% 노출을 유지합니다.</p>
+          <h2>영지식증명의 원리</h2>
+          <p>영지식증명(ZKP)은 어떤 사실이 참임을 증명하면서도 원본 데이터는 노출하지 않는 암호 기법입니다.
+            드론은 임무 명령서 전체 대신 증명 값(π)만 전송해, 감청되어도 임무 데이터는 드러나지 않습니다.</p>
         </div>
         <div class="card-grid cols-4">
           <div class="card flow-card"><span class="step-no">1</span><span class="emoji">📡</span>
@@ -252,14 +251,14 @@
       <div class="inner">
         <div class="section-head">
           <span class="kicker">⚛️ 양자내성은 왜 필요한가?</span>
-          <h2>Groth16 + 격자 기반 암호의 결합</h2>
+          <h2>격자 기반 암호의 결합</h2>
         </div>
         <div class="card" style="max-width:760px;">
           <p style="font-size:15px; line-height:1.8;">
-            기존 ZKP(Groth16)는 타원곡선 암호(ECDSA) 기반 — 양자컴퓨터에 취약합니다. 양자내성 ZKP는
-            <b style="color:var(--text)">CRYSTALS-Dilithium</b>(격자 기반) + <b style="color:var(--text)">CRYSTALS-Kyber</b>(키 교환)를
-            결합하여 2033년 이후 양자컴퓨터로도 해독 불가한 수학 구조를 사용합니다. Aleo 블록체인은 이 두 기술을
-            온디바이스(드론 탑재 MCU)에서 실행 가능한 경량 회로(Leo 언어)로 구현합니다.
+            기존 Groth16은 타원곡선 암호(ECDSA) 기반이라 양자컴퓨터에 취약합니다. 양자내성 ZKP는
+            <b style="color:var(--text)">CRYSTALS-Dilithium</b>과 <b style="color:var(--text)">Kyber</b>를 결합해
+            2033년 이후 양자컴퓨터 환경에서도 유효한 구조를 사용하며, Aleo 블록체인이 이를 드론 탑재 MCU에서
+            구동 가능한 경량 회로(Leo)로 구현합니다.
           </p>
         </div>
       </div>
@@ -270,8 +269,9 @@
       <div class="inner">
         <div class="section-head">
           <span class="kicker">시스템 아키텍처</span>
-          <h2>5-레이어 온디바이스 ZKP 아키텍처</h2>
-          <p>드론 내부부터 블록체인 검증까지 — 5개 레이어가 유기적으로 작동하여 원본 데이터 노출 없이 임무 진위를 검증합니다.</p>
+          <h2>5-레이어 온디바이스 구조</h2>
+          <p>드론 내부 연산부터 블록체인 검증까지 5개 레이어가 순차적으로 작동하며,
+            원본 데이터 노출 없이 임무 진위를 확인합니다.</p>
         </div>
         <div class="card-grid cols-3">
           <div class="card layer-card"><div class="layer-id">L0</div><h3>물리·HW</h3>
@@ -295,7 +295,8 @@
       <div class="inner">
         <div class="section-head">
           <span class="kicker">동작 흐름</span>
-          <h2>임무 명령부터 검증까지 4단계</h2>
+          <h2>임무 검증 4단계</h2>
+          <p>임무 명령 수신부터 최종 검증까지 네 단계로 구성됩니다.</p>
         </div>
         <div class="card-grid cols-4">
           <div class="card flow-card"><span class="step-no">①</span>
@@ -337,8 +338,8 @@ function prove_mission:
       <div class="inner">
         <div class="section-head">
           <span class="kicker">기술 비교</span>
-          <h2>기존 방식 vs 양자내성 ZKP</h2>
-          <p>현재 운용 중인 KCMVP 기반 방식과 근미래 표준 PQC, 그리고 ZKProofID 방식을 비교합니다.</p>
+          <h2>기존 방식과의 비교</h2>
+          <p>현재 운용 중인 KCMVP 방식, 근미래 표준인 PQC, ZKProofID 방식을 함께 비교합니다.</p>
         </div>
         <table class="cmp">
           <thead><tr><th>비교 항목</th><th>기존 (KCMVP/AES)</th><th>PQC 단순 전환</th><th>✦ ZKProofID (PQC+ZKP)</th></tr></thead>
@@ -362,8 +363,8 @@ function prove_mission:
       <div class="inner">
         <div class="section-head">
           <span class="kicker">5개년 로드맵</span>
-          <h2>TRL 3 → 7 단계별 구축 계획</h2>
-          <p>방위사업청·국방과학연구소·삼성SDS 협력 체계. 2026~2030년 5개년 양자내성 ZKP 드론 보안 시스템 구축.</p>
+          <h2>5개년 구축 로드맵</h2>
+          <p>방위사업청·국방과학연구소·삼성SDS와 협력해 2026년부터 2030년까지 TRL 3단계에서 7단계로 단계적으로 구축합니다.</p>
         </div>
         <div class="card-grid cols-4">
           <div class="card phase-card done">
@@ -390,8 +391,8 @@ function prove_mission:
     <section class="slide">
       <div class="inner" style="padding-top:10vh;">
         <div class="cta">
-          <h2>2030년대 양자시대를 대비하는 유일한 선택</h2>
-          <p>민간 연령인증에서 증명된 Aleo ZKP 기술을 군사·드론 보안에 적용.<br>KCMVP의 한계를 넘는 완전 분산형 양자내성 임무 검증 플랫폼.</p>
+          <h2>군사·드론 보안 적용</h2>
+          <p>민간 연령인증에서 검증된 Aleo ZKP 기술을 군사·드론 보안에 적용합니다.<br>KCMVP 중앙집중식 구조를 보완하는 분산형 양자내성 검증 플랫폼입니다.</p>
           <div class="btns">
             <a class="primary" href="https://www.zkpage.store/sales.html" target="_blank" rel="noopener">ZKP 제안서 보기</a>
             <a class="ghost" href="https://www.zkpage.store/index.html#live-demo" target="_blank" rel="noopener">민간 ZKP 데모 체험</a>
