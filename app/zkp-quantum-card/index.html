@@ -6,359 +6,454 @@
 <title>양자내성 영지식증명 — 카드 프레젠테이션</title>
 <style>
   :root {
-    --bg: #0b1020;
-    --panel: #121831;
-    --panel-2: #171f40;
-    --border: #2a3566;
-    --text: #e8ecff;
-    --text-muted: #9aa5d1;
-    --accent-cyan: #22d3ee;
-    --accent-violet: #a78bfa;
-    --accent-red: #f87171;
-    --accent-green: #4ade80;
+    /* radio7 톤의 따뜻하고 밝은 팔레트 */
+    --bg: #f6f1e7;
+    --panel: #fffdf8;
+    --panel-2: #efe7d6;
+    --border: #e2d8c3;
+    --text: #2a2620;
+    --text-muted: #7a7164;
+    --accent: #b9770e;      /* 주황/호박색 - 주 강조 */
+    --accent-2: #9a6008;    /* 진한 호박색 - hover/보조 */
+    --accent-terracotta: #c2612f; /* 보조 강조 2 */
+    --accent-red: #b4452f;  /* 경고 */
+    --accent-green: #5c7a3d;/* 완료/확인 */
     --radius: 14px;
   }
   * { box-sizing: border-box; }
+  html, body { height: 100%; }
   body {
     margin: 0;
-    background: radial-gradient(1200px 600px at 50% -10%, #182154 0%, var(--bg) 55%);
+    background: var(--bg);
     color: var(--text);
-    font-family: -apple-system, "Pretendard", "Apple SD Gothic Neo", sans-serif;
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
     line-height: 1.6;
+    overflow: hidden; /* 가로 슬라이드 전용, 바디 스크롤 없음 */
   }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 48px 20px 80px; }
 
-  /* ---- Section header ---- */
-  .section-head { margin: 64px 0 20px; }
-  .section-head:first-of-type { margin-top: 0; }
+  /* ---------------- 가로 슬라이드 덱 ---------------- */
+  .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+  .track { display: flex; height: 100%; transition: transform .45s cubic-bezier(.2,.7,.2,1); will-change: transform; }
+  .slide {
+    min-width: 100vw; height: 100%; overflow-y: auto; overflow-x: hidden;
+    padding: 56px 8vw 90px;
+  }
+  .slide .inner { max-width: 1180px; margin: 0 auto; }
+
+  /* ---------------- 섹션 헤더 ---------------- */
+  .section-head { margin: 0 0 20px; }
   .kicker {
     display: inline-block; font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em;
-    color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 8px;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 8px;
   }
-  .section-head h2 { font-size: 26px; font-weight: 800; margin: 0; }
+  .section-head h2 { font-size: 26px; font-weight: 800; margin: 0; letter-spacing: -0.01em; }
   .section-head p { color: var(--text-muted); font-size: 14.5px; margin: 8px 0 0; max-width: 720px; }
 
-  /* ---- Hero ---- */
-  .hero {
-    background: linear-gradient(135deg, #151c42, #0e1330);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 48px 36px;
-    text-align: center;
+  /* ---------------- 히어로 ---------------- */
+  .hero { text-align: center; padding-top: 6vh; }
+  .hero::before {
+    content: ""; display: block; width: 180px; height: 6px; margin: 0 auto 22px; border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-terracotta));
   }
-  .hero .kicker { color: var(--accent-violet); }
-  .hero h1 { font-size: 34px; font-weight: 800; margin: 10px 0 18px; line-height: 1.3; }
+  .hero .kicker { color: var(--accent-terracotta); }
+  .hero h1 { font-size: 36px; font-weight: 800; margin: 10px 0 18px; line-height: 1.32; letter-spacing: -0.02em; }
   .hero p.lead { color: var(--text-muted); font-size: 15.5px; max-width: 620px; margin: 0 auto 32px; }
   .hero p.lead b { color: var(--text); }
-  .stat-grid {
-    display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 10px;
-  }
-  .stat-card {
-    background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 18px 10px;
-  }
-  .stat-card .num { font-size: 24px; font-weight: 800; color: var(--accent-cyan); }
+  .stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 10px; }
+  .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 10px; }
+  .stat-card .num { font-size: 24px; font-weight: 800; color: var(--accent); }
   .stat-card .label { font-size: 11.5px; color: var(--text-muted); margin-top: 4px; }
 
-  /* ---- Generic card grid ---- */
+  /* ---------------- 카드 공통 ---------------- */
   .card-grid { display: grid; gap: 16px; }
   .card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
-  .card-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
-  .card-grid.cols-6 { grid-template-columns: repeat(3, 1fr); }
   .card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
 
-  .card {
-    background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 20px; position: relative;
-  }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
   .card .tag {
     display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px;
-    background: rgba(34,211,238,0.12); color: var(--accent-cyan); margin-bottom: 10px;
+    background: rgba(185,119,14,0.12); color: var(--accent-2); margin-bottom: 10px;
   }
-  .card .tag.warn { background: rgba(248,113,113,0.14); color: var(--accent-red); }
-  .card .tag.now { background: rgba(167,139,250,0.16); color: var(--accent-violet); }
+  .card .tag.warn { background: rgba(180,69,47,0.12); color: var(--accent-red); }
+  .card .tag.now { background: rgba(194,97,47,0.14); color: var(--accent-terracotta); }
   .card h3 { font-size: 15.5px; font-weight: 700; margin: 0 0 8px; }
   .card p { font-size: 13.3px; color: var(--text-muted); margin: 0; }
   .card .emoji { font-size: 26px; margin-bottom: 8px; display: block; }
 
-  /* timeline variant */
-  .timeline-card.now { border-color: var(--accent-violet); box-shadow: 0 0 0 1px var(--accent-violet) inset; }
+  .timeline-card.now { border-color: var(--accent-terracotta); box-shadow: 0 0 0 1px var(--accent-terracotta) inset; }
   .timeline-card.risk { border-color: var(--accent-red); }
 
-  /* flow numbered steps */
   .flow-card { text-align: center; }
   .flow-card .step-no {
-    width: 30px; height: 30px; border-radius: 50%; background: var(--accent-cyan); color: #06121a;
+    width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fffaf0;
     display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 10px;
   }
   .flow-card code {
-    display: block; text-align: left; background: #0a0f24; border: 1px solid var(--border);
-    border-radius: 8px; padding: 10px; font-size: 11px; color: var(--accent-green); margin-top: 10px;
-    overflow-x: auto; white-space: pre;
+    display: block; text-align: left; background: #2a2620; color: #e8e2d4; border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px; font-size: 11px; margin-top: 10px; overflow-x: auto; white-space: pre;
   }
 
-  /* layer stack */
-  .layer-card { border-left: 3px solid var(--accent-cyan); }
-  .layer-card .layer-id { font-size: 20px; font-weight: 800; color: var(--accent-cyan); }
+  .layer-card { border-left: 3px solid var(--accent); }
+  .layer-card .layer-id { font-size: 20px; font-weight: 800; color: var(--accent); }
   .layer-card ul { margin: 8px 0 0; padding-left: 18px; font-size: 12.8px; color: var(--text-muted); }
   .layer-card ul li { margin-bottom: 3px; }
 
-  /* comparison table */
   table.cmp { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--panel);
     border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
   table.cmp th, table.cmp td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
   table.cmp th { background: var(--panel-2); font-size: 12px; color: var(--text-muted); font-weight: 700; }
-  table.cmp td.best { color: var(--accent-cyan); font-weight: 700; }
+  table.cmp td.best { color: var(--accent-2); font-weight: 700; }
   table.cmp tr:last-child td { border-bottom: none; }
 
-  /* roadmap phases */
   .phase-card { border-top: 3px solid var(--border); }
   .phase-card.done { border-top-color: var(--accent-green); }
-  .phase-card.active { border-top-color: var(--accent-cyan); }
+  .phase-card.active { border-top-color: var(--accent); }
   .phase-card.future { border-top-color: var(--text-muted); }
   .phase-card .phase-status { font-size: 12.5px; font-weight: 700; margin-bottom: 4px; }
   .phase-card .phase-year { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
   .phase-card h3 { font-size: 16px; }
-  .phase-card .trl { font-size: 11px; color: var(--accent-violet); font-weight: 700; margin-bottom: 10px; display: inline-block; }
+  .phase-card .trl { font-size: 11px; color: var(--accent-terracotta); font-weight: 700; margin-bottom: 10px; display: inline-block; }
   .phase-card ul { margin: 0; padding-left: 16px; font-size: 12.5px; color: var(--text-muted); }
   .phase-card ul li { margin-bottom: 4px; }
 
-  /* CTA */
-  .cta {
-    text-align: center; background: linear-gradient(135deg, #1c2456, #0e1330);
-    border: 1px solid var(--border); border-radius: 20px; padding: 44px 24px; margin-top: 64px;
-  }
+  .cta { text-align: center; background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 44px 24px; margin-top: 10px; }
   .cta h2 { font-size: 22px; margin-bottom: 10px; }
   .cta p { color: var(--text-muted); font-size: 14px; margin-bottom: 22px; }
   .cta .btns a {
     display: inline-block; margin: 0 6px; padding: 10px 18px; border-radius: 999px;
     font-size: 13px; font-weight: 700; text-decoration: none;
   }
-  .cta .btns a.primary { background: var(--accent-cyan); color: #06121a; }
+  .cta .btns a.primary { background: var(--accent); color: #fffaf0; }
+  .cta .btns a.primary:hover { background: var(--accent-2); }
   .cta .btns a.ghost { border: 1px solid var(--border); color: var(--text); }
+  .cta .btns a.ghost:hover { border-color: var(--accent); color: var(--accent-2); }
 
   footer { text-align: center; color: var(--text-muted); font-size: 11.5px; margin-top: 30px; }
-  footer a { color: var(--accent-cyan); }
+  footer a { color: var(--accent-2); }
+
+  /* ---------------- 내비게이션 (가로 클릭 이동) ---------------- */
+  .nav-btn {
+    position: fixed; top: 50%; transform: translateY(-50%); z-index: 20;
+    width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--border);
+    background: rgba(255,253,248,0.92); color: var(--text); font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(90,65,25,.14);
+  }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent-2); }
+  .nav-btn.prev { left: 18px; }
+  .nav-btn.next { right: 18px; }
+  .nav-btn[disabled] { opacity: .25; cursor: default; }
+  .nav-btn[disabled]:hover { border-color: var(--border); color: var(--text); }
+
+  .dots { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 20;
+    display: flex; gap: 9px; background: rgba(255,253,248,0.85); padding: 8px 14px; border-radius: 999px;
+    border: 1px solid var(--border); }
+  .dots button {
+    width: 9px; height: 9px; border-radius: 50%; border: none; background: var(--border); cursor: pointer; padding: 0;
+  }
+  .dots button.active { background: var(--accent); width: 22px; border-radius: 999px; }
+
+  .progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-terracotta));
+    z-index: 21; transition: width .45s ease; }
 
   @media (max-width: 900px) {
     .stat-grid { grid-template-columns: repeat(3, 1fr); }
-    .card-grid.cols-4, .card-grid.cols-5, .card-grid.cols-6, .card-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.cols-4, .card-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
     table.cmp { font-size: 11.5px; }
+    .nav-btn { width: 38px; height: 38px; font-size: 16px; }
   }
   @media (max-width: 560px) {
     .stat-grid { grid-template-columns: repeat(2, 1fr); }
-    .card-grid.cols-4, .card-grid.cols-5, .card-grid.cols-6, .card-grid.cols-3 { grid-template-columns: 1fr; }
+    .card-grid.cols-4, .card-grid.cols-3 { grid-template-columns: 1fr; }
+    .slide { padding: 40px 6vw 80px; }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <!-- HERO -->
-  <section class="hero">
-    <span class="kicker">Defense Security Technology · 2030s Quantum Era</span>
-    <h1>양자내성 영지식증명<br>온디바이스 드론 보안 아키텍처</h1>
-    <p class="lead">2030년대 양자컴퓨터가 RSA·ECDSA를 해독하는 시대, <b>Aleo + Post-Quantum ZKP</b>로
-      드론·UAS의 임무 데이터를 단 한 비트도 노출하지 않고 실시간 검증합니다.</p>
-    <div class="stat-grid">
-      <div class="stat-card"><div class="num">99.9%</div><div class="label">양자내성 보안강화</div></div>
-      <div class="stat-card"><div class="num">&lt;2s</div><div class="label">온보드 ZKP 검증시간</div></div>
-      <div class="stat-card"><div class="num">60%</div><div class="label">암호화 대역폭 절감</div></div>
-      <div class="stat-card"><div class="num">30%</div><div class="label">CPU 부하 감소</div></div>
-      <div class="stat-card"><div class="num">TRL 3→7</div><div class="label">5개년 기술성숙도 목표</div></div>
-    </div>
-  </section>
+<div class="progress" id="progress"></div>
+<button class="nav-btn prev" id="prevBtn" aria-label="이전">‹</button>
+<button class="nav-btn next" id="nextBtn" aria-label="다음">›</button>
+<div class="dots" id="dots"></div>
 
-  <!-- WHY NOW: TIMELINE -->
-  <div class="section-head">
-    <span class="kicker">왜 지금인가?</span>
-    <h2>양자컴퓨터가 온다 — 지금 대비하지 않으면 늦습니다</h2>
-    <p>현재 군사 통신·드론 인증에 쓰이는 RSA·ECDSA는 양자컴퓨터 앞에서 수초 내 해독됩니다.
-      KCMVP 중앙집중식 시스템의 한계를 극복할 분산형 ZKP 체계가 필요합니다.</p>
-  </div>
-  <div class="card-grid cols-5">
-    <div class="card timeline-card">
-      <span class="tag">~2023</span>
-      <h3>기존 암호체계</h3>
-      <p>RSA-2048 / ECDSA 운용. KCMVP 기반 중앙 집중식 키 관리. 드론 임무 데이터 AES-256 암호화 전송.</p>
-    </div>
-    <div class="card timeline-card">
-      <span class="tag">2024</span>
-      <h3>NIST PQC 표준 확정</h3>
-      <p>CRYSTALS-Kyber / Dilithium. 한국 국방부도 전환 검토 시작. <b>ZKProofID 개발 착수.</b></p>
-    </div>
-    <div class="card timeline-card now">
-      <span class="tag now">🔴 2026 · 현재</span>
-      <h3>과도기 / 하이브리드 구간</h3>
-      <p>Google·IBM 양자컴퓨터 1,000+ 큐비트 달성. "Harvest Now, Decrypt Later" 공격 진행 중. ZKP 온디바이스 PoC 단계.</p>
-    </div>
-    <div class="card timeline-card risk">
-      <span class="tag warn">⚠️ 2029</span>
-      <h3>위험 구간 진입 예상</h3>
-      <p>오류수정 양자컴퓨터 수천 큐비트 예상. 민감 군사 데이터 소급 해독 위험 현실화. PQC 전환 완료 마감 시한.</p>
-    </div>
-    <div class="card timeline-card risk">
-      <span class="tag warn">🚨 2033+</span>
-      <h3>양자우위</h3>
-      <p>RSA-2048 해독 50% 확률. 전환 완료 못한 국가는 군사통신 완전 노출 위험.</p>
-    </div>
-  </div>
+<div class="deck">
+  <div class="track" id="track">
 
-  <!-- ZKP CONCEPT -->
-  <div class="section-head">
-    <span class="kicker">ZKP란?</span>
-    <h2>"증명하되, 아무것도 보여주지 않는다"</h2>
-    <p>영지식증명(Zero-Knowledge Proof)은 어떤 사실이 참임을 증명하면서도, 그 증거가 되는 원본 데이터를
-      전혀 노출하지 않는 수학적 기법입니다. 🚁 드론이 "나는 적법한 임무 명령을 받은 아군 드론이다"를 증명해야 할 때 —
-      기존 방식은 임무 명령서 전체를 전송해 감청 시 전부 노출되지만, ZKP 방식은 증명 π만 전송해 임무 데이터 0% 노출을 유지합니다.</p>
-  </div>
-  <div class="card-grid cols-4">
-    <div class="card flow-card"><span class="step-no">1</span><span class="emoji">📡</span>
-      <h3>임무 데이터 입력</h3><p>드론 ID, GPS, 임무코드, 타임스탬프</p></div>
-    <div class="card flow-card"><span class="step-no">2</span><span class="emoji">⚛️</span>
-      <h3>온보드 ZKP 생성</h3><p>Groth16 / PLONK — 드론 CPU에서 직접 증명 생성</p></div>
-    <div class="card flow-card"><span class="step-no">3</span><span class="emoji">📤</span>
-      <h3>증명(π)만 전송</h3><p>원본 데이터 없이 수백 바이트 증명만 전송</p></div>
-    <div class="card flow-card"><span class="step-no">4</span><span class="emoji">✅</span>
-      <h3>지상국 검증</h3><p>100ms 이내 참/거짓 즉시 판정</p></div>
-  </div>
+    <!-- SLIDE 1: HERO -->
+    <section class="slide">
+      <div class="inner hero">
+        <span class="kicker">Defense Security Technology · 2030s Quantum Era</span>
+        <h1>양자내성 영지식증명<br>온디바이스 드론 보안 아키텍처</h1>
+        <p class="lead">2030년대 양자컴퓨터가 RSA·ECDSA를 해독하는 시대, <b>Aleo + Post-Quantum ZKP</b>로
+          드론·UAS의 임무 데이터를 단 한 비트도 노출하지 않고 실시간 검증합니다.</p>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="num">99.9%</div><div class="label">양자내성 보안강화</div></div>
+          <div class="stat-card"><div class="num">&lt;2s</div><div class="label">온보드 ZKP 검증시간</div></div>
+          <div class="stat-card"><div class="num">60%</div><div class="label">암호화 대역폭 절감</div></div>
+          <div class="stat-card"><div class="num">30%</div><div class="label">CPU 부하 감소</div></div>
+          <div class="stat-card"><div class="num">TRL 3→7</div><div class="label">5개년 기술성숙도 목표</div></div>
+        </div>
+      </div>
+    </section>
 
-  <div class="section-head">
-    <span class="kicker">⚛️ 양자내성은 왜 필요한가?</span>
-    <h2>Groth16 + 격자 기반 암호의 결합</h2>
-    <p>기존 ZKP(Groth16)는 타원곡선 암호(ECDSA) 기반 — 양자컴퓨터에 취약합니다. 양자내성 ZKP는
-      <b>CRYSTALS-Dilithium</b>(격자 기반) + <b>CRYSTALS-Kyber</b>(키 교환)를 결합하여 2033년 이후
-      양자컴퓨터로도 해독 불가한 수학 구조를 사용합니다. Aleo 블록체인은 이 두 기술을 온디바이스(드론 탑재 MCU)에서
-      실행 가능한 경량 회로(Leo 언어)로 구현합니다.</p>
-  </div>
+    <!-- SLIDE 2: TIMELINE -->
+    <section class="slide">
+      <div class="inner">
+        <div class="section-head">
+          <span class="kicker">왜 지금인가?</span>
+          <h2>양자컴퓨터가 온다 — 지금 대비하지 않으면 늦습니다</h2>
+          <p>현재 군사 통신·드론 인증에 쓰이는 RSA·ECDSA는 양자컴퓨터 앞에서 수초 내 해독됩니다.
+            KCMVP 중앙집중식 시스템의 한계를 극복할 분산형 ZKP 체계가 필요합니다.</p>
+        </div>
+        <div class="card-grid" style="grid-template-columns: repeat(5,1fr);">
+          <div class="card timeline-card">
+            <span class="tag">~2023</span><h3>기존 암호체계</h3>
+            <p>RSA-2048 / ECDSA 운용. KCMVP 기반 중앙 집중식 키 관리. 드론 임무 데이터 AES-256 암호화 전송.</p></div>
+          <div class="card timeline-card">
+            <span class="tag">2024</span><h3>NIST PQC 표준 확정</h3>
+            <p>CRYSTALS-Kyber / Dilithium. 한국 국방부도 전환 검토 시작. <b>ZKProofID 개발 착수.</b></p></div>
+          <div class="card timeline-card now">
+            <span class="tag now">🔶 2026 · 현재</span><h3>과도기 / 하이브리드 구간</h3>
+            <p>Google·IBM 양자컴퓨터 1,000+ 큐비트 달성. "Harvest Now, Decrypt Later" 공격 진행 중. ZKP 온디바이스 PoC 단계.</p></div>
+          <div class="card timeline-card risk">
+            <span class="tag warn">⚠️ 2029</span><h3>위험 구간 진입 예상</h3>
+            <p>오류수정 양자컴퓨터 수천 큐비트 예상. 민감 군사 데이터 소급 해독 위험 현실화. PQC 전환 완료 마감 시한.</p></div>
+          <div class="card timeline-card risk">
+            <span class="tag warn">🚨 2033+</span><h3>양자우위</h3>
+            <p>RSA-2048 해독 50% 확률. 전환 완료 못한 국가는 군사통신 완전 노출 위험.</p></div>
+        </div>
+      </div>
+    </section>
 
-  <!-- ARCHITECTURE -->
-  <div class="section-head">
-    <span class="kicker">시스템 아키텍처</span>
-    <h2>5-레이어 온디바이스 ZKP 아키텍처</h2>
-    <p>드론 내부부터 블록체인 검증까지 — 5개 레이어가 유기적으로 작동하여 원본 데이터 노출 없이 임무 진위를 검증합니다.</p>
-  </div>
-  <div class="card-grid cols-3">
-    <div class="card layer-card"><div class="layer-id">L0</div><h3>물리·HW</h3>
-      <ul><li>ARM Cortex-M MCU</li><li>TEE 보안영역 (TrustZone)</li><li>드론 센서 (GPS/IMU/카메라)</li><li>저전력 최적화 H/W</li></ul></div>
-    <div class="card layer-card"><div class="layer-id">L1</div><h3>PQC 암호</h3>
-      <ul><li>CRYSTALS-Kyber-1024 (KEM)</li><li>CRYSTALS-Dilithium-3 (서명)</li><li>SPHINCS+ (해시기반 서명)</li><li>FALCON (격자기반 서명)</li></ul></div>
-    <div class="card layer-card"><div class="layer-id">L2</div><h3>ZKP 회로</h3>
-      <ul><li>Leo 언어 (Aleo 전용)</li><li>Groth16 zk-SNARK</li><li>mission_proof.aleo 회로</li><li>PLONK (유니버설 SRS)</li></ul></div>
-    <div class="card layer-card"><div class="layer-id">L3</div><h3>온디바이스</h3>
-      <ul><li>임무 데이터 전처리</li><li>온보드 증명 생성 (Prover)</li><li>실시간 증명 검증 (&lt;2s)</li><li>Anti-Replay Nonce</li></ul></div>
-    <div class="card layer-card"><div class="layer-id">L4</div><h3>통신/망</h3>
-      <ul><li>군용 전술 데이터링크</li><li>NATO STANAG 4586</li><li>ATCIS / KJCCS 연동</li><li>증명(π)만 전송 — 원본 無</li></ul></div>
-    <div class="card layer-card"><div class="layer-id">L5</div><h3>블록체인</h3>
-      <ul><li>Aleo 블록체인</li><li>분산 ZKP 검증기</li><li>임무 감사로그 (불변)</li><li>다중 지상국 동시 검증</li></ul></div>
-  </div>
+    <!-- SLIDE 3: ZKP CONCEPT -->
+    <section class="slide">
+      <div class="inner">
+        <div class="section-head">
+          <span class="kicker">ZKP란?</span>
+          <h2>"증명하되, 아무것도 보여주지 않는다"</h2>
+          <p>영지식증명(Zero-Knowledge Proof)은 어떤 사실이 참임을 증명하면서도, 그 증거가 되는 원본 데이터를
+            전혀 노출하지 않는 수학적 기법입니다. 🚁 드론이 "나는 적법한 임무 명령을 받은 아군 드론이다"를 증명해야 할 때 —
+            기존 방식은 임무 명령서 전체를 전송해 감청 시 전부 노출되지만, ZKP 방식은 증명 π만 전송해 임무 데이터 0% 노출을 유지합니다.</p>
+        </div>
+        <div class="card-grid cols-4">
+          <div class="card flow-card"><span class="step-no">1</span><span class="emoji">📡</span>
+            <h3>임무 데이터 입력</h3><p>드론 ID, GPS, 임무코드, 타임스탬프</p></div>
+          <div class="card flow-card"><span class="step-no">2</span><span class="emoji">⚛️</span>
+            <h3>온보드 ZKP 생성</h3><p>Groth16 / PLONK — 드론 CPU에서 직접 증명 생성</p></div>
+          <div class="card flow-card"><span class="step-no">3</span><span class="emoji">📤</span>
+            <h3>증명(π)만 전송</h3><p>원본 데이터 없이 수백 바이트 증명만 전송</p></div>
+          <div class="card flow-card"><span class="step-no">4</span><span class="emoji">✅</span>
+            <h3>지상국 검증</h3><p>100ms 이내 참/거짓 즉시 판정</p></div>
+        </div>
+      </div>
+    </section>
 
-  <!-- FLOW WITH CODE -->
-  <div class="section-head">
-    <span class="kicker">동작 흐름</span>
-    <h2>임무 명령부터 검증까지 4단계</h2>
-  </div>
-  <div class="card-grid cols-4">
-    <div class="card flow-card"><span class="step-no">①</span>
-      <h3>임무 명령 수신</h3>
-      <p>지상국이 드론에게 임무 명령을 전달. Kyber-1024로 양자내성 암호화된 채널로만 수신.</p>
-      <code>function receive_mission(
+    <!-- SLIDE 4: 왜 양자내성 -->
+    <section class="slide">
+      <div class="inner">
+        <div class="section-head">
+          <span class="kicker">⚛️ 양자내성은 왜 필요한가?</span>
+          <h2>Groth16 + 격자 기반 암호의 결합</h2>
+        </div>
+        <div class="card" style="max-width:760px;">
+          <p style="font-size:15px; line-height:1.8;">
+            기존 ZKP(Groth16)는 타원곡선 암호(ECDSA) 기반 — 양자컴퓨터에 취약합니다. 양자내성 ZKP는
+            <b style="color:var(--text)">CRYSTALS-Dilithium</b>(격자 기반) + <b style="color:var(--text)">CRYSTALS-Kyber</b>(키 교환)를
+            결합하여 2033년 이후 양자컴퓨터로도 해독 불가한 수학 구조를 사용합니다. Aleo 블록체인은 이 두 기술을
+            온디바이스(드론 탑재 MCU)에서 실행 가능한 경량 회로(Leo 언어)로 구현합니다.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: ARCHITECTURE -->
+    <section class="slide">
+      <div class="inner">
+        <div class="section-head">
+          <span class="kicker">시스템 아키텍처</span>
+          <h2>5-레이어 온디바이스 ZKP 아키텍처</h2>
+          <p>드론 내부부터 블록체인 검증까지 — 5개 레이어가 유기적으로 작동하여 원본 데이터 노출 없이 임무 진위를 검증합니다.</p>
+        </div>
+        <div class="card-grid cols-3">
+          <div class="card layer-card"><div class="layer-id">L0</div><h3>물리·HW</h3>
+            <ul><li>ARM Cortex-M MCU</li><li>TEE 보안영역 (TrustZone)</li><li>드론 센서 (GPS/IMU/카메라)</li><li>저전력 최적화 H/W</li></ul></div>
+          <div class="card layer-card"><div class="layer-id">L1</div><h3>PQC 암호</h3>
+            <ul><li>CRYSTALS-Kyber-1024 (KEM)</li><li>CRYSTALS-Dilithium-3 (서명)</li><li>SPHINCS+ (해시기반 서명)</li><li>FALCON (격자기반 서명)</li></ul></div>
+          <div class="card layer-card"><div class="layer-id">L2</div><h3>ZKP 회로</h3>
+            <ul><li>Leo 언어 (Aleo 전용)</li><li>Groth16 zk-SNARK</li><li>mission_proof.aleo 회로</li><li>PLONK (유니버설 SRS)</li></ul></div>
+          <div class="card layer-card"><div class="layer-id">L3</div><h3>온디바이스</h3>
+            <ul><li>임무 데이터 전처리</li><li>온보드 증명 생성 (Prover)</li><li>실시간 증명 검증 (&lt;2s)</li><li>Anti-Replay Nonce</li></ul></div>
+          <div class="card layer-card"><div class="layer-id">L4</div><h3>통신/망</h3>
+            <ul><li>군용 전술 데이터링크</li><li>NATO STANAG 4586</li><li>ATCIS / KJCCS 연동</li><li>증명(π)만 전송 — 원본 無</li></ul></div>
+          <div class="card layer-card"><div class="layer-id">L5</div><h3>블록체인</h3>
+            <ul><li>Aleo 블록체인</li><li>분산 ZKP 검증기</li><li>임무 감사로그 (불변)</li><li>다중 지상국 동시 검증</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: FLOW WITH CODE -->
+    <section class="slide">
+      <div class="inner">
+        <div class="section-head">
+          <span class="kicker">동작 흐름</span>
+          <h2>임무 명령부터 검증까지 4단계</h2>
+        </div>
+        <div class="card-grid cols-4">
+          <div class="card flow-card"><span class="step-no">①</span>
+            <h3>임무 명령 수신</h3>
+            <p>지상국이 드론에게 임무 명령을 전달. Kyber-1024로 양자내성 암호화된 채널로만 수신.</p>
+            <code>function receive_mission(
   encrypted_cmd: Ciphertext,
   kyber_sk: PrivateKey
 ) -&gt; MissionData</code></div>
-    <div class="card flow-card"><span class="step-no">②</span>
-      <h3>온보드 ZKP 생성</h3>
-      <p>드론 내 MCU가 임무 데이터를 witness로 mission_proof.aleo 회로를 실행해 증명 π 생성.</p>
-      <code>program mission_proof.aleo;
+          <div class="card flow-card"><span class="step-no">②</span>
+            <h3>온보드 ZKP 생성</h3>
+            <p>드론 내 MCU가 임무 데이터를 witness로 mission_proof.aleo 회로를 실행해 증명 π 생성.</p>
+            <code>program mission_proof.aleo;
 function prove_mission:
   input r0: MissionWitness;
   output proof: Proof;</code></div>
-    <div class="card flow-card"><span class="step-no">③</span>
-      <h3>증명(π)만 전송</h3>
-      <p>원본 임무 데이터 없이 수백 바이트의 ZKP 증명만 전술 데이터링크로 전송. 감청돼도 원본 복원 수학적 불가.</p>
-      <code>{
+          <div class="card flow-card"><span class="step-no">③</span>
+            <h3>증명(π)만 전송</h3>
+            <p>원본 임무 데이터 없이 수백 바이트의 ZKP 증명만 전술 데이터링크로 전송. 감청돼도 원본 복원 수학적 불가.</p>
+            <code>{
   "proof": "0x8b5cf6...",
   "nonce": "anti-replay",
   "timestamp": 1748xxx
 }</code></div>
-    <div class="card flow-card"><span class="step-no">④</span>
-      <h3>다중 지상국 검증</h3>
-      <p>Aleo 블록체인의 분산 검증기가 100ms 이내 증명 유효성 판정. 복수 지상국 동시 검증으로 단일 실패점 제거.</p>
-      <code>{
+          <div class="card flow-card"><span class="step-no">④</span>
+            <h3>다중 지상국 검증</h3>
+            <p>Aleo 블록체인의 분산 검증기가 100ms 이내 증명 유효성 판정. 복수 지상국 동시 검증으로 단일 실패점 제거.</p>
+            <code>{
   "verified": true,
   "mission_id": "MQ-9A",
   "elapsed_ms": 87
 }</code></div>
-  </div>
+        </div>
+      </div>
+    </section>
 
-  <!-- COMPARISON TABLE -->
-  <div class="section-head">
-    <span class="kicker">기술 비교</span>
-    <h2>기존 방식 vs 양자내성 ZKP</h2>
-    <p>현재 운용 중인 KCMVP 기반 방식과 근미래 표준 PQC, 그리고 ZKProofID 방식을 비교합니다.</p>
-  </div>
-  <table class="cmp">
-    <thead>
-      <tr><th>비교 항목</th><th>기존 (KCMVP/AES)</th><th>PQC 단순 전환</th><th>✦ ZKProofID (PQC+ZKP)</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>양자컴퓨터 내성</td><td>취약 (2033년 붕괴)</td><td>내성 있음</td><td class="best">최강 — Kyber+Dilithium</td></tr>
-      <tr><td>데이터 프라이버시</td><td>감청 시 전체 노출</td><td>암호화만, 메타데이터 노출</td><td class="best">원본 데이터 0% 노출</td></tr>
-      <tr><td>중앙집중 의존성</td><td>KCMVP 서버 필수</td><td>CA 서버 필수</td><td class="best">완전 분산 — 서버 불필요</td></tr>
-      <tr><td>단일 실패점(SPOF)</td><td>서버 공격 = 전체 마비</td><td>동일 문제</td><td class="best">블록체인 분산 검증</td></tr>
-      <tr><td>온디바이스 실행</td><td>불가 (서버 의존)</td><td>부분 가능</td><td class="best">MCU에서 직접 실행</td></tr>
-      <tr><td>검증 속도</td><td>200~500ms (RTT 포함)</td><td>150~300ms</td><td class="best">&lt;100ms (로컬 검증)</td></tr>
-      <tr><td>전송 데이터 크기</td><td>전체 페이로드 (수 KB)</td><td>암호화 페이로드 (수 KB)</td><td class="best">증명(π)만 ~500바이트</td></tr>
-      <tr><td>NATO STANAG 호환</td><td>부분</td><td>가능</td><td class="best">완전 호환 (LOI 레벨 5)</td></tr>
-      <tr><td>배터리 효율</td><td>기준 (100%)</td><td>110~120% (오버헤드)</td><td class="best">50% 절감 (온보드 최적화)</td></tr>
-    </tbody>
-  </table>
+    <!-- SLIDE 7: COMPARISON -->
+    <section class="slide">
+      <div class="inner">
+        <div class="section-head">
+          <span class="kicker">기술 비교</span>
+          <h2>기존 방식 vs 양자내성 ZKP</h2>
+          <p>현재 운용 중인 KCMVP 기반 방식과 근미래 표준 PQC, 그리고 ZKProofID 방식을 비교합니다.</p>
+        </div>
+        <table class="cmp">
+          <thead><tr><th>비교 항목</th><th>기존 (KCMVP/AES)</th><th>PQC 단순 전환</th><th>✦ ZKProofID (PQC+ZKP)</th></tr></thead>
+          <tbody>
+            <tr><td>양자컴퓨터 내성</td><td>취약 (2033년 붕괴)</td><td>내성 있음</td><td class="best">최강 — Kyber+Dilithium</td></tr>
+            <tr><td>데이터 프라이버시</td><td>감청 시 전체 노출</td><td>암호화만, 메타데이터 노출</td><td class="best">원본 데이터 0% 노출</td></tr>
+            <tr><td>중앙집중 의존성</td><td>KCMVP 서버 필수</td><td>CA 서버 필수</td><td class="best">완전 분산 — 서버 불필요</td></tr>
+            <tr><td>단일 실패점(SPOF)</td><td>서버 공격 = 전체 마비</td><td>동일 문제</td><td class="best">블록체인 분산 검증</td></tr>
+            <tr><td>온디바이스 실행</td><td>불가 (서버 의존)</td><td>부분 가능</td><td class="best">MCU에서 직접 실행</td></tr>
+            <tr><td>검증 속도</td><td>200~500ms (RTT 포함)</td><td>150~300ms</td><td class="best">&lt;100ms (로컬 검증)</td></tr>
+            <tr><td>전송 데이터 크기</td><td>전체 페이로드 (수 KB)</td><td>암호화 페이로드 (수 KB)</td><td class="best">증명(π)만 ~500바이트</td></tr>
+            <tr><td>NATO STANAG 호환</td><td>부분</td><td>가능</td><td class="best">완전 호환 (LOI 레벨 5)</td></tr>
+            <tr><td>배터리 효율</td><td>기준 (100%)</td><td>110~120% (오버헤드)</td><td class="best">50% 절감 (온보드 최적화)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-  <!-- ROADMAP -->
-  <div class="section-head">
-    <span class="kicker">5개년 로드맵</span>
-    <h2>TRL 3 → 7 단계별 구축 계획</h2>
-    <p>방위사업청·국방과학연구소·삼성SDS 협력 체계. 2026~2030년 5개년 양자내성 ZKP 드론 보안 시스템 구축.</p>
-  </div>
-  <div class="card-grid cols-4">
-    <div class="card phase-card done">
-      <div class="phase-status" style="color:var(--accent-green)">✅ Phase 1 — 완료</div>
-      <div class="phase-year">2024–25</div>
-      <h3>개념 증명 및 PoC</h3><span class="trl">TRL 3</span>
-      <ul><li>Aleo Leo 언어 ZKP 회로 설계</li><li>NIST PQC 알고리즘 연구</li><li>드론 MCU 경량화 가능성 검증</li><li>ZKProofID 민간 버전 개발 완료</li></ul></div>
-    <div class="card phase-card active">
-      <div class="phase-status" style="color:var(--accent-cyan)">🔄 Phase 2 — 진행중</div>
-      <div class="phase-year">2026</div>
-      <h3>프로토타입 개발</h3><span class="trl">TRL 4</span>
-      <ul><li>mission_proof.aleo 회로 구현</li><li>Kyber-1024 + Dilithium-3 통합</li><li>ARM Cortex-M 포팅 테스트</li><li>군 관계자 발표 및 LOI 검토</li></ul></div>
-    <div class="card phase-card future">
-      <div class="phase-status">⏳ Phase 3 — 예정</div>
-      <div class="phase-year">2027–28</div>
-      <h3>실험 환경 통합</h3><span class="trl">TRL 5–6</span>
-      <ul><li>실제 드론(MQ-9급) 탑재 테스트</li><li>NATO STANAG 4586 인터페이스</li><li>ATCIS / KJCCS 연동 검증</li><li>배터리 수명 50% 절감 검증</li></ul></div>
-    <div class="card phase-card future">
-      <div class="phase-status">🚀 Phase 4 — 목표</div>
-      <div class="phase-year">2029–30</div>
-      <h3>야전 배치 및 표준화</h3><span class="trl">TRL 7</span>
-      <ul><li>유·무인 복합전투체계 전면 적용</li><li>한국군 PQC 표준 ZKP 규격 등재</li><li>방위사업청 양산 계약</li><li>동맹국 기술 이전 협의</li></ul></div>
-  </div>
+    <!-- SLIDE 8: ROADMAP -->
+    <section class="slide">
+      <div class="inner">
+        <div class="section-head">
+          <span class="kicker">5개년 로드맵</span>
+          <h2>TRL 3 → 7 단계별 구축 계획</h2>
+          <p>방위사업청·국방과학연구소·삼성SDS 협력 체계. 2026~2030년 5개년 양자내성 ZKP 드론 보안 시스템 구축.</p>
+        </div>
+        <div class="card-grid cols-4">
+          <div class="card phase-card done">
+            <div class="phase-status" style="color:var(--accent-green)">✅ Phase 1 — 완료</div>
+            <div class="phase-year">2024–25</div><h3>개념 증명 및 PoC</h3><span class="trl">TRL 3</span>
+            <ul><li>Aleo Leo 언어 ZKP 회로 설계</li><li>NIST PQC 알고리즘 연구</li><li>드론 MCU 경량화 가능성 검증</li><li>ZKProofID 민간 버전 개발 완료</li></ul></div>
+          <div class="card phase-card active">
+            <div class="phase-status" style="color:var(--accent-2)">🔄 Phase 2 — 진행중</div>
+            <div class="phase-year">2026</div><h3>프로토타입 개발</h3><span class="trl">TRL 4</span>
+            <ul><li>mission_proof.aleo 회로 구현</li><li>Kyber-1024 + Dilithium-3 통합</li><li>ARM Cortex-M 포팅 테스트</li><li>군 관계자 발표 및 LOI 검토</li></ul></div>
+          <div class="card phase-card future">
+            <div class="phase-status">⏳ Phase 3 — 예정</div>
+            <div class="phase-year">2027–28</div><h3>실험 환경 통합</h3><span class="trl">TRL 5–6</span>
+            <ul><li>실제 드론(MQ-9급) 탑재 테스트</li><li>NATO STANAG 4586 인터페이스</li><li>ATCIS / KJCCS 연동 검증</li><li>배터리 수명 50% 절감 검증</li></ul></div>
+          <div class="card phase-card future">
+            <div class="phase-status">🚀 Phase 4 — 목표</div>
+            <div class="phase-year">2029–30</div><h3>야전 배치 및 표준화</h3><span class="trl">TRL 7</span>
+            <ul><li>유·무인 복합전투체계 전면 적용</li><li>한국군 PQC 표준 ZKP 규격 등재</li><li>방위사업청 양산 계약</li><li>동맹국 기술 이전 협의</li></ul></div>
+        </div>
+      </div>
+    </section>
 
-  <!-- CTA -->
-  <div class="cta">
-    <h2>2030년대 양자시대를 대비하는 유일한 선택</h2>
-    <p>민간 연령인증에서 증명된 Aleo ZKP 기술을 군사·드론 보안에 적용.<br>KCMVP의 한계를 넘는 완전 분산형 양자내성 임무 검증 플랫폼.</p>
-    <div class="btns">
-      <a class="primary" href="https://www.zkpage.store/sales.html" target="_blank" rel="noopener">ZKP 제안서 보기</a>
-      <a class="ghost" href="https://www.zkpage.store/index.html#live-demo" target="_blank" rel="noopener">민간 ZKP 데모 체험</a>
-      <a class="ghost" href="https://www.zkpage.store/index.html" target="_blank" rel="noopener">메인 페이지</a>
-    </div>
+    <!-- SLIDE 9: CTA -->
+    <section class="slide">
+      <div class="inner" style="padding-top:10vh;">
+        <div class="cta">
+          <h2>2030년대 양자시대를 대비하는 유일한 선택</h2>
+          <p>민간 연령인증에서 증명된 Aleo ZKP 기술을 군사·드론 보안에 적용.<br>KCMVP의 한계를 넘는 완전 분산형 양자내성 임무 검증 플랫폼.</p>
+          <div class="btns">
+            <a class="primary" href="https://www.zkpage.store/sales.html" target="_blank" rel="noopener">ZKP 제안서 보기</a>
+            <a class="ghost" href="https://www.zkpage.store/index.html#live-demo" target="_blank" rel="noopener">민간 ZKP 데모 체험</a>
+            <a class="ghost" href="https://www.zkpage.store/index.html" target="_blank" rel="noopener">메인 페이지</a>
+          </div>
+        </div>
+        <footer>
+          원본: <a href="https://www.zkpage.store/quantum.html" target="_blank" rel="noopener">zkpage.store/quantum.html</a> (ZKProofID)
+          — 이 페이지는 리서치 노트 → 카드섹션 웹페이지 아이디어의 로컬 프로토타입입니다. (← → 또는 버튼/점으로 이동)
+        </footer>
+      </div>
+    </section>
+
   </div>
-
-  <footer>
-    원본: <a href="https://www.zkpage.store/quantum.html" target="_blank" rel="noopener">zkpage.store/quantum.html</a> (ZKProofID)
-    — 이 페이지는 리서치 노트 → 카드섹션 웹페이지 아이디어의 로컬 프로토타입입니다.
-  </footer>
-
 </div>
+
+<script>
+(function () {
+  const track = document.getElementById("track");
+  const slides = Array.from(track.children);
+  const n = slides.length;
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const dotsWrap = document.getElementById("dots");
+  const progress = document.getElementById("progress");
+  let i = 0;
+
+  slides.forEach((_, idx) => {
+    const b = document.createElement("button");
+    if (idx === 0) b.className = "active";
+    b.addEventListener("click", () => go(idx));
+    dotsWrap.appendChild(b);
+  });
+
+  function render() {
+    track.style.transform = `translateX(-${i * 100}vw)`;
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === n - 1;
+    Array.from(dotsWrap.children).forEach((d, idx) => d.classList.toggle("active", idx === i));
+    progress.style.width = `${((i + 1) / n) * 100}%`;
+  }
+  function go(idx) { i = Math.max(0, Math.min(n - 1, idx)); render(); }
+
+  prevBtn.addEventListener("click", () => go(i - 1));
+  nextBtn.addEventListener("click", () => go(i + 1));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") go(i + 1);
+    if (e.key === "ArrowLeft") go(i - 1);
+  });
+
+  // 터치 스와이프
+  let startX = null;
+  track.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener("touchend", (e) => {
+    if (startX === null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 50) go(i + (dx < 0 ? 1 : -1));
+    startX = null;
+  });
+
+  render();
+})();
+</script>
 </body>
 </html>
