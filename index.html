@@ -54,6 +54,13 @@
   .card.static:hover { transform: none; border-color: var(--border); }
   .card.static .thumb img { object-fit: contain; background: #f0f1f4; }
 
+  .card.report .thumb { aspect-ratio: 3/4; background: #f0f1f4; }
+  .card.report .thumb img { object-fit: contain; object-position: top; }
+  .card.report .link-row {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .card.report .link-row::before { content: "⬇"; font-size: 14px; }
+
   footer { text-align: center; margin-top: 56px; font-size: 12.5px; color: var(--text-muted); }
 </style>
 </head>
@@ -155,6 +162,31 @@
           <p>DB 사용가이드·메타모델링·SQL·튜닝 등을 체계화한 데이터 아키텍처 가이드 위키.</p>
         </div>
       </div>
+
+    </div>
+
+    <h2 class="section-title">Tech 레포트 <span class="muted">· 검토 보고서 (클릭 시 PDF 다운로드)</span></h2>
+    <div class="grid">
+
+      <a class="card report" href="reports/goodrich-mydata-license.pdf" download target="_blank" rel="noopener">
+        <div class="thumb"><img src="assets/reports/goodrich-mydata-license.png" alt="굿리치 마이데이터 허가 조건과 절차 검토 보고" loading="lazy" /></div>
+        <div class="body">
+          <span class="tag">Tech Report</span>
+          <h2>굿리치 마이데이터 허가 조건과 절차 검토 보고</h2>
+          <p>본인신용정보관리업(마이데이터) 허가 요건·절차와 굿리치 적용 방안, 단계별 CTO 추진 방향 검토.</p>
+          <div class="link-row">PDF 다운로드</div>
+        </div>
+      </a>
+
+      <a class="card report" href="reports/goodrich-refund-rate-dashboard.pdf" download target="_blank" rel="noopener">
+        <div class="thumb"><img src="assets/reports/goodrich-refund-rate-dashboard.png" alt="굿리치 환수율 분석 및 대시보드 구축 방안" loading="lazy" /></div>
+        <div class="body">
+          <span class="tag">Tech Report</span>
+          <h2>굿리치 환수율 분석 및 대시보드 구축 방안</h2>
+          <p>GA 환수율 분석과 Snowflake 기반 영업 실적 대시보드 구축 방안, 데이터 표준·모델·시뮬레이션 엔진 설계.</p>
+          <div class="link-row">PDF 다운로드</div>
+        </div>
+      </a>
 
     </div>
 
