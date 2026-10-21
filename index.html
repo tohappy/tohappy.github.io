@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KPark Project Demos</title>
+<title>KPark (Kwangil Park) Project Demos</title>
 <style>
   :root {
-    --bg: #0f1115; --panel: #171a21; --border: #262b36;
-    --text: #e8eaed; --text-muted: #9aa0ab; --accent: #ff9b00; --accent-2: #ffb84d;
+    --bg: #f5f6f8; --panel: #ffffff; --border: #e3e5ea;
+    --text: #1c1f26; --text-muted: #6b7280; --accent: #ff9b00; --accent-2: #e07e00;
   }
   * { box-sizing: border-box; }
   body {
@@ -52,7 +52,7 @@
 
   .card.static { cursor: default; }
   .card.static:hover { transform: none; border-color: var(--border); }
-  .card.static .thumb img { object-fit: contain; background: #0b0d11; }
+  .card.static .thumb img { object-fit: contain; background: #f0f1f4; }
 
   footer { text-align: center; margin-top: 56px; font-size: 12.5px; color: var(--text-muted); }
 </style>
@@ -60,7 +60,7 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>KPark <span>Project Demos</span></h1>
+      <h1>KPark <span>(Kwangil Park) Project Demos</span></h1>
       <p>프로젝트 사이트 모음 — 아래 카드를 클릭하면 각 데모로 이동합니다.</p>
     </header>
 
@@ -108,12 +108,11 @@
 
     </div>
 
-    <h2 class="section-title">사내 업무 도구 <span class="muted">· 제작한 내부 유틸리티 (데모 링크 없음)</span></h2>
+    <h2 class="section-title">사내 업무 도구 <span class="muted">· 제작한 내부 유틸리티 (데모 링크 없음, 스크린샷 교체 예정)</span></h2>
     <div class="grid">
 
       <div class="card static">
-        <div class="thumb"><img src="assets/tools/sql-extractor.png" alt="SQL Extractor" loading="lazy" /></div>
-        <div class="body">
+        <div class="body" style="padding-top:20px;">
           <span class="tag">모니터링</span>
           <h2>SQL Extractor</h2>
           <p>실행 로그에서 SQL을 자동 추출·분류하고, 느린 쿼리를 실시간으로 필터링하는 도구.</p>
@@ -121,8 +120,7 @@
       </div>
 
       <div class="card static">
-        <div class="thumb"><img src="assets/tools/pivot.png" alt="Pivot" loading="lazy" /></div>
-        <div class="body">
+        <div class="body" style="padding-top:20px;">
           <span class="tag">데이터 분석</span>
           <h2>Pivot</h2>
           <p>csv/tsv/sql 파일을 불러와 행·열·집계값을 즉석에서 설정하는 범용 피벗 테이블 생성기.</p>
@@ -130,8 +128,7 @@
       </div>
 
       <div class="card static">
-        <div class="thumb"><img src="assets/tools/inventory-manager.png" alt="Inventory Manager" loading="lazy" /></div>
-        <div class="body">
+        <div class="body" style="padding-top:20px;">
           <span class="tag">인프라</span>
           <h2>Inventory Manager</h2>
           <p>서버/인프라 인벤토리(OS, 데이터센터, 사양)를 버전별로 불러와 피벗 분석하는 도구.</p>
@@ -139,8 +136,7 @@
       </div>
 
       <div class="card static">
-        <div class="thumb"><img src="assets/tools/file-search-ai.png" alt="폴더 검색 AI" loading="lazy" /></div>
-        <div class="body">
+        <div class="body" style="padding-top:20px;">
           <span class="tag">검색</span>
           <h2>폴더 검색 AI</h2>
           <p>75만여 개 파일을 DB로 색인해 파일명·생성일·확장자·태그로 즉시 검색하는 도구.</p>
@@ -148,8 +144,7 @@
       </div>
 
       <div class="card static">
-        <div class="thumb"><img src="assets/tools/da-guide.png" alt="DA-Guide" loading="lazy" /></div>
-        <div class="body">
+        <div class="body" style="padding-top:20px;">
           <span class="tag">문서화</span>
           <h2>DA-Guide</h2>
           <p>DB 사용가이드·메타모델링·SQL·튜닝 등을 체계화한 데이터 아키텍처 가이드 위키.</p>
