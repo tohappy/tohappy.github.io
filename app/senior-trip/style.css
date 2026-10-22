@@ -1,0 +1,160 @@
+/* 시니어 친화 디자인 원칙 반영
+   - 본문 18px 이상, 고대비, 터치 영역 넓게, 애니메이션 없음 */
+
+:root {
+  --text: #1a1a1a;
+  --bg: #fdfbf7;
+  --accent: #b5491f;      /* 단풍 톤 */
+  --accent-soft: #f3e4d7;
+  --border: #d9cdbe;
+  --ok: #2d6a3e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+header {
+  background: var(--accent);
+  color: #fff;
+  padding: 28px 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+header p {
+  margin: 0;
+  font-size: 18px;
+  opacity: 0.95;
+}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+.intro {
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 32px;
+  font-size: 18px;
+}
+
+.filter-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.filter-nav a {
+  display: inline-block;
+  padding: 14px 20px;
+  background: #fff;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
+  min-height: 44px;
+}
+
+.filter-nav a:hover,
+.filter-nav a:focus {
+  background: var(--accent);
+  color: #fff;
+}
+
+section.group {
+  margin-bottom: 44px;
+}
+
+section.group h2 {
+  font-size: 24px;
+  border-bottom: 3px solid var(--accent);
+  padding-bottom: 8px;
+  margin-bottom: 18px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.badge.easy { background: #e3f3e6; color: var(--ok); }
+.badge.mid { background: #fdf0d9; color: #8a5a00; }
+.badge.hard { background: #fbe3e3; color: #9c2b2b; }
+
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.card dl {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 6px 12px;
+  margin: 0;
+  font-size: 17px;
+}
+
+.card dt {
+  font-weight: 700;
+  color: #555;
+}
+
+.card dd {
+  margin: 0;
+}
+
+.notice {
+  background: #fff8ec;
+  border: 1px solid #e8d8b5;
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 17px;
+}
+
+.notice li { margin-bottom: 8px; }
+
+footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 15px;
+  color: #777;
+}
+
+a { color: var(--accent); }
+
+@media (max-width: 480px) {
+  .card dl { grid-template-columns: 1fr; }
+  .card dt { margin-top: 10px; }
+}
