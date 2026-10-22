@@ -45,6 +45,23 @@ main {
   padding: 24px 16px 60px;
 }
 
+.theme-banner {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.theme-banner h2 {
+  font-size: 22px;
+  margin: 0 0 4px;
+  color: var(--accent);
+}
+
+.theme-banner p {
+  margin: 0;
+  font-size: 17px;
+  color: #555;
+}
+
 .intro {
   background: var(--accent-soft);
   border: 1px solid var(--border);
@@ -118,9 +135,25 @@ section.group h2 {
   font-size: 20px;
 }
 
+.card h3 a {
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 2px dotted var(--accent);
+}
+
+.card h3 a::after {
+  content: " 🔗";
+  font-size: 15px;
+}
+
+.card h3 a:hover,
+.card h3 a:focus {
+  color: var(--accent);
+}
+
 .card dl {
   display: grid;
-  grid-template-columns: 90px 1fr;
+  grid-template-columns: 110px 1fr;
   gap: 6px 12px;
   margin: 0;
   font-size: 17px;
