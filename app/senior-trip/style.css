@@ -241,6 +241,36 @@ section.group h2 {
 .insurance-banner-big {
   background: #fff4e5;
   border: 2px solid #e08a1f;
+  padding: 40px 22px;
+}
+
+.insurance-banner-big .big-banner-title {
+  font-size: 28px;
+}
+
+.insurance-banner-big .big-banner-sub {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.insurance-banner-big .big-banner-btn {
+  font-size: 22px;
+  padding: 20px;
+}
+
+.stumble-emoji {
+  font-size: 64px;
+  line-height: 1;
+  margin: 10px 0 18px;
+  animation: stumble 3.5s ease-in-out infinite;
+}
+
+@keyframes stumble {
+  0%   { transform: rotate(0deg) translateY(0); }
+  8%   { transform: rotate(-18deg) translateY(2px); }
+  16%  { transform: rotate(10deg) translateY(10px); }
+  24%  { transform: rotate(0deg) translateY(0); }
+  100% { transform: rotate(0deg) translateY(0); }
 }
 
 .insurance-banner-big .big-banner-title { color: #8a4b00; }
