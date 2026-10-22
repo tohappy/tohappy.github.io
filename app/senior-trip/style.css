@@ -188,44 +188,71 @@ section.group h2 {
   background: #1f4e2c;
 }
 
-/* 여행자 보험 사이드 배너 */
-.insurance-banner {
-  position: fixed;
-  top: 120px;
-  right: 18px;
-  width: 190px;
-  background: #fff4e5;
-  border: 2px solid #e08a1f;
-  border-radius: 14px;
-  padding: 16px 14px;
+/* 큰 배너 2개: 여행도우미 신청 / 여행자 보험 */
+.big-banners {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.big-banner {
+  border-radius: 16px;
+  padding: 26px 20px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-  z-index: 500;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.insurance-banner p {
-  margin: 0 0 12px;
+.big-banner-title {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.big-banner-sub {
+  margin: 0 0 18px;
   font-size: 16px;
-  font-weight: 700;
-  color: #8a4b00;
 }
 
-.insurance-btn {
+.big-banner-btn {
+  display: block;
   width: 100%;
-  padding: 12px 10px;
-  background: #e08a1f;
-  color: #fff;
+  padding: 16px;
   border: none;
   border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 19px;
+  font-weight: 800;
+  color: #fff;
   cursor: pointer;
-  min-height: 44px;
+  min-height: 48px;
 }
 
-.insurance-btn:hover,
-.insurance-btn:focus {
-  background: #c5740f;
+.helper-banner {
+  background: #e7f5ea;
+  border: 2px solid var(--ok);
+}
+
+.helper-banner .big-banner-title { color: var(--ok); }
+.helper-banner .big-banner-sub { color: #2f5a3a; }
+.helper-banner .big-banner-btn { background: var(--ok); }
+.helper-banner .big-banner-btn:hover,
+.helper-banner .big-banner-btn:focus { background: #1f4e2c; }
+
+.insurance-banner-big {
+  background: #fff4e5;
+  border: 2px solid #e08a1f;
+}
+
+.insurance-banner-big .big-banner-title { color: #8a4b00; }
+.insurance-banner-big .big-banner-sub { color: #8a5a1f; }
+.insurance-banner-big .big-banner-btn { background: #e08a1f; }
+.insurance-banner-big .big-banner-btn:hover,
+.insurance-banner-big .big-banner-btn:focus { background: #c5740f; }
+
+@media (max-width: 520px) {
+  .big-banners {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* 신청 모달 */
@@ -337,12 +364,4 @@ a { color: var(--accent); }
 @media (max-width: 480px) {
   .card dl { grid-template-columns: 1fr; }
   .card dt { margin-top: 10px; }
-  .insurance-banner {
-    position: sticky;
-    top: auto;
-    right: auto;
-    width: 100%;
-    border-radius: 0;
-    margin: 0 0 16px;
-  }
 }
